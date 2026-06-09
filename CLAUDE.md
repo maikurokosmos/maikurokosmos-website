@@ -193,13 +193,25 @@ package.json
 - 未来如需存放设计源文件，建议结构 `design/brand/`，目前**只需 brand 一类**，其余暂不需要。
 - ⚠️ **PSD 等源文件勿直接提交 git**（二进制、体积大、无法 diff）。应放云盘，或用 Git LFS，或加入 `.gitignore`。仓库内只保留导出的 PNG/SVG 成品。
 
+### 设计语言（阶段 1，迭代中）
+
+> 站主参考 "quirky + technology" 风格（Squarespace Blueprint 样本 + givecard.com），整体走"略微怪趣 + 大字 + 纯色"路线。
+
+- **整体基调**：浅色。Hero 区用淡紫背景（`--c-hero: #f1e9fb`）。
+- **纯色，无渐变** ⚠️：全站**不使用任何渐变填充**，所有颜色为纯色（站主明确要求）。按钮、标签、语言键等均为品牌纯色。
+- **标题字体**：**Unbounded**（开源 OFL、`@fontsource-variable/unbounded` 自托管、几何 quirky），变量 `--font-display`，用于所有标题与大字 slogan；正文用系统字体栈 `--font-sans`。
+- **大字 slogan**：Hero 下方一条超大 slogan（淡紫 `--c-slogan: #c2a6ea`），跑马灯**从右向左滚动**（`.marquee` / `@keyframes marquee`，34s，鼠标悬停暂停）。受 `prefers-reduced-motion` 控制，会为偏好减少动效的用户自动静止。
+- **动效**：slogan 跑马灯已启用。其余动效（滚动淡入等）仍待规划。
+- **插图规划**：Hero 配图与三张板块卡片**将来都换成 AI 手绘风背景插图**。当前 Hero 无配图占位；板块卡片为纯文字 + 顶部彩色边（已去掉早期的 emoji 图标）。
+- **语言**：UI **英文优先**，导航栏含 `EN / 中` 语言切换（中文版"即将上线"，暂未接入 i18n）。
+
 ---
 
 ## 6. 开发路线图（循序渐进）
 
 站主零基础，按阶段推进，每阶段都有可见成果：
 
-- [ ] **阶段 0：初始化**　检查 Node.js → `npm create astro` → 接入 logo/favicon → 本地跑通
+- [x] **阶段 0：初始化**　检查 Node.js → `npm create astro` → 接入 logo/favicon → 本地跑通 ✅
 - [ ] **阶段 1：骨架 + 普通文章**　三板块入口页 + 用纯 Markdown 发文章 → 部署到 Vercel 上线
 - [ ] **阶段 2：MDX 设计元素**　设计并引入自定义组件（特殊标题、结论卡片等），丰富文章排版
 - [ ] **阶段 3：交互 Demo**　实现余弦相似度 demo（优先纯浏览器 `transformers.js` 方案，免费 / 私密 / 自包含）

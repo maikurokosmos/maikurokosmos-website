@@ -1,0 +1,193 @@
+/* =========================================================
+   maikurokosmos —— 全局设计系统
+   浅色基调 + 品牌紫点缀，科技感来自渐变 / 网格 / 微光。
+   ========================================================= */
+
+:root {
+  /* —— 品牌色（来自 logo） —— */
+  --c-ink: #210a35;        /* 主色：深紫，用于标题、深色区块 */
+  --c-purple: #881ed3;     /* 紫 */
+  --c-pink: #e736d3;       /* 粉紫 */
+
+  /* —— 中性色 —— */
+  --c-bg: #ffffff;         /* 页面背景 */
+  --c-bg-alt: #faf7fd;     /* 交替区块的浅薰衣草底 */
+  --c-surface: #ffffff;    /* 卡片背景 */
+  --c-text: #2e2a38;       /* 正文 */
+  --c-muted: #6b6577;      /* 次要文字 */
+  --c-border: #ece8f3;     /* 描边 */
+
+  /* —— 效果（不使用渐变填充，全站纯色） —— */
+  --c-hero: #f1e9fb;       /* Hero 区浅紫背景 */
+  --c-slogan: #c2a6ea;     /* 大字 slogan 的淡紫色 */
+  --glow: 0 8px 30px rgba(136, 30, 211, 0.18);
+  --shadow-sm: 0 1px 3px rgba(33, 10, 53, 0.06), 0 1px 2px rgba(33, 10, 53, 0.04);
+  --shadow-md: 0 10px 30px rgba(33, 10, 53, 0.08);
+
+  /* —— 字体 —— */
+  /* 暂用系统字体栈（零外部依赖、国内访问也快）；含中文回退。日后如需自定义字体，改这里即可。 */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  /* 显示字体：Unbounded（开源、几何 quirky、自托管），用于标题与大字 */
+  --font-display: 'Unbounded Variable', var(--font-sans);
+
+  /* —— 尺寸 —— */
+  --container: 1180px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --header-h: 68px;
+}
+
+/* —— reset —— */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* 让锚点跳转不被吸顶导航遮挡 */
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--c-text);
+  background: var(--c-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  color: var(--c-ink);
+  font-family: var(--font-display);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.5em;
+  font-weight: 800;
+}
+h1 { font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
+h2 { font-size: clamp(1.8rem, 3.2vw, 2.6rem); }
+h3 { font-size: 1.25rem; font-weight: 700; }
+h4 { font-size: 1.05rem; font-weight: 700; }
+
+p { margin: 0 0 1em; }
+
+a {
+  color: var(--c-purple);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+a:hover { color: var(--c-pink); }
+
+img { max-width: 100%; display: block; }
+
+/* —— 布局工具 —— */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.section {
+  padding-block: 72px;
+}
+.section--alt { background: var(--c-bg-alt); }
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-purple);
+  margin-bottom: 12px;
+}
+
+.accent-text {
+  color: var(--c-purple);
+}
+
+/* —— 按钮 —— */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.btn--primary {
+  background: var(--c-purple);
+  color: #fff;
+  box-shadow: var(--glow);
+}
+.btn--primary:hover {
+  color: #fff;
+  background: #761ab8;
+  transform: translateY(-2px);
+}
+.btn--ghost {
+  background: #fff;
+  color: var(--c-ink);
+  border-color: var(--c-border);
+}
+.btn--ghost:hover {
+  color: var(--c-ink);
+  border-color: var(--c-purple);
+  transform: translateY(-2px);
+}
+
+/* —— 卡片 —— */
+.card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: #e0d4f0;
+}
+
+/* —— 板块标签 chip —— */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #fff;
+}
+
+/* —— 可访问性：跳转主内容 —— */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--c-ink);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 0 0 8px 0;
+  z-index: 1000;
+}
+.skip-link:focus { left: 0; color: #fff; }
+
+/* —— 减少动画偏好 —— */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SECTIONS } from '../config/site';
+---
+
+<BaseLayout title="About" description="About maikurokosmos.">
+  <section class="about">
+    <div class="container about-grid">
+      <div class="about-text">
+        <span class="eyebrow">About</span>
+        <h1>About me</h1>
+        <p class="lead">
+          Hi, I'm maikurokosmos. This site is where I collect and share things
+          across the three areas I keep coming back to.
+        </p>
+        <p>
+          This is placeholder copy for now — you can replace it with a real
+          introduction later: your research interests, what you're working on,
+          how to get in touch, and so on.
+        </p>
+
+        <h2>What I write about</h2>
+        <ul class="about-list">
+          {
+            SECTIONS.map((section) => (
+              <li>
+                <a href={`/${section.slug}`}><strong>{section.label}</strong></a>
+                {' — '}{section.blurb}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <aside class="about-aside" aria-hidden="true">
+        <div class="about-visual"><span>portrait / image</span></div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about { padding-block: 64px; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .lead { font-size: 1.2rem; color: var(--c-text); }
+  .about-list { padding-left: 0; list-style: none; }
+  .about-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-muted);
+  }
+  .about-list strong { color: var(--c-ink); }
+
+  .about-visual {
+    aspect-ratio: 3 / 4;
+    border-radius: 18px;
+    background: var(--c-hero);
+    border: 1px solid var(--c-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-aside { order: -1; max-width: 280px; }
+  }
+</style>

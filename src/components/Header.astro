@@ -1,0 +1,274 @@
+---
+import { SECTIONS } from '../config/site';
+---
+
+<header class="site-header">
+  <div class="container nav-bar">
+    <a class="brand" href="/" aria-label="maikurokosmos home">
+      <img src="/images/logo.svg" alt="maikurokosmos" height="30" />
+    </a>
+
+    <button
+      class="nav-toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="primary-nav"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" id="primary-nav" aria-label="Primary">
+      <ul class="nav-list">
+        <li><a class="nav-top" href="/about">About</a></li>
+
+        {
+          SECTIONS.map((section) => (
+            <li class="has-dropdown">
+              <div class="nav-row">
+                <a class="nav-top" href={`/${section.slug}`}>{section.label}</a>
+                <button
+                  class="submenu-toggle"
+                  aria-label={`Expand ${section.label} submenu`}
+                  aria-expanded="false"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                    <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </div>
+
+              <ul class="dropdown">
+                {section.children.map((child) => (
+                  <li>
+                    <a href={`/${section.slug}/${child.slug}`}>
+                      <span class="dd-label">{child.label}</span>
+                      <span class="dd-blurb">{child.blurb}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+
+        <li class="lang-switch" role="group" aria-label="Language">
+          <span class="lang lang--active" aria-current="true">EN</span>
+          <span class="lang lang--disabled" title="Chinese version coming soon" aria-disabled="true">中</span>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .nav-bar {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+  }
+  .brand img {
+    width: auto;
+    transition: opacity 0.18s ease;
+  }
+  .brand:hover img { opacity: 0.8; }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-top {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 10px;
+    color: var(--c-ink);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .nav-top:hover { color: var(--c-purple); background: var(--c-bg-alt); }
+
+  .has-dropdown { position: relative; }
+  .nav-row { display: inline-flex; align-items: center; }
+  .submenu-toggle {
+    display: none; /* hidden on desktop, shown on mobile */
+    background: none;
+    border: none;
+    color: var(--c-muted);
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  /* —— language switcher —— */
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    padding: 3px;
+    border: 1px solid var(--c-border);
+    border-radius: 999px;
+    background: #fff;
+  }
+  .lang {
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 6px 10px;
+    border-radius: 999px;
+    color: var(--c-muted);
+  }
+  .lang--active { background: var(--c-purple); color: #fff; }
+  .lang--disabled { cursor: not-allowed; opacity: 0.55; }
+
+  /* —— desktop dropdown —— */
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 240px;
+    list-style: none;
+    margin: 0;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid var(--c-border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  }
+  .has-dropdown:hover .dropdown,
+  .has-dropdown:focus-within .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .dropdown a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--c-ink);
+  }
+  .dropdown a:hover { background: var(--c-bg-alt); }
+  .dd-label { display: block; font-weight: 600; font-size: 0.92rem; }
+  .dd-blurb { display: block; font-size: 0.8rem; color: var(--c-muted); margin-top: 2px; }
+
+  /* —— hamburger button —— */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    background: none;
+    border: 1px solid var(--c-border);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    margin-inline: auto;
+    background: var(--c-ink);
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  /* —— mobile (≤900px) —— */
+  @media (max-width: 900px) {
+    .nav-toggle { display: flex; }
+
+    .nav {
+      position: fixed;
+      inset: var(--header-h) 0 0 0;
+      background: #fff;
+      padding: 16px 24px 40px;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      border-top: 1px solid var(--c-border);
+    }
+    .site-header.nav-open .nav { transform: translateX(0); }
+
+    .nav-list { flex-direction: column; align-items: stretch; gap: 2px; }
+    .nav-row { justify-content: space-between; }
+    .nav-top { flex: 1; font-size: 1.1rem; padding: 14px; }
+
+    .submenu-toggle { display: inline-flex; }
+
+    .dropdown {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      border: none;
+      border-left: 2px solid var(--c-border);
+      border-radius: 0;
+      margin: 0 0 8px 14px;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 8px;
+      transition: max-height 0.25s ease;
+    }
+    .has-dropdown.open .dropdown { max-height: 600px; }
+    .has-dropdown.open .submenu-toggle { transform: rotate(180deg); color: var(--c-purple); }
+
+    .lang-switch { align-self: flex-start; margin: 14px 0 0 14px; }
+
+    /* hamburger → close (X) */
+    .site-header.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .site-header.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+    .site-header.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+</style>
+
+<script>
+  const header = document.querySelector('.site-header');
+  const toggle = document.querySelector('.nav-toggle');
+
+  // hamburger menu open/close
+  toggle?.addEventListener('click', () => {
+    const open = header?.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded', String(!!open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  // mobile submenu expand/collapse
+  document.querySelectorAll('.submenu-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.has-dropdown');
+      const open = parent?.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(!!open));
+    });
+  });
+
+  // reset state when returning to desktop width
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) {
+      header?.classList.remove('nav-open');
+      document.body.style.overflow = '';
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>
