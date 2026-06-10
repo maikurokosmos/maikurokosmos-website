@@ -1,6 +1,6 @@
 // Global site config — single source of truth for nav, sections, and subsections.
-// The Header, homepage section cards, section index pages, and placeholder pages
-// all read from here, so changing it once updates the whole site.
+// label = stylized display title (the playful c→k spelling), name = correct plain
+// spelling, slug = route. Change it once and it updates across the whole site.
 
 export interface SubSection {
   label: string;
@@ -9,13 +9,15 @@ export interface SubSection {
 }
 
 export interface Section {
+  /** Stylized display title with the playful c→k spelling, e.g. "te(k)h" */
   label: string;
+  /** Correct plain spelling, e.g. "tech" — used for the bolded clarifier, meta & a11y */
+  name: string;
+  /** Route slug (kept correct so URLs are unaffected), e.g. "tech" */
   slug: string;
+  /** Plain description (no markup); the correct name is bolded separately at render time */
   blurb: string;
-  /** Accent color (from the brand palette) */
   accent: string;
-  /** Section icon (emoji for now; can be swapped for a custom SVG later) */
-  icon: string;
   children: SubSection[];
 }
 
@@ -25,41 +27,53 @@ export const SITE = {
   url: 'https://www.maikurokosmos.com',
 };
 
+// Social links shown in the hero, below the buttons.
+// ⚠️ Replace the placeholder hrefs ('#') with your real URLs.
+export const SOCIALS = [
+  { label: 'github', href: '#', icon: 'simple-icons:github' },
+  { label: 'linkedin', href: '#', icon: 'simple-icons:linkedin' },
+  { label: 'x', href: '#', icon: 'simple-icons:x' },
+  { label: 'youtube', href: '#', icon: 'simple-icons:youtube' },
+];
+
 export const SECTIONS: Section[] = [
   {
-    label: 'Tech',
+    label: 'te(k)h',
+    name: 'tech',
     slug: 'tech',
-    blurb: 'Long-form research, dataset releases, and interactive demos.',
+    blurb:
+      'independent research on AI safety and control, dataset releases, and interactive demos you can run right in the browser.',
     accent: '#881ed3',
-    icon: '🔬',
     children: [
-      { label: 'Writings', slug: 'writings', blurb: 'Long-form research and technical writing.' },
-      { label: 'Datasets', slug: 'datasets', blurb: 'Datasets I compile and release.' },
-      { label: 'Tools and Demos', slug: 'tools-and-demos', blurb: 'Interactive demos you can run in the browser.' },
+      { label: 'writings', slug: 'writings', blurb: 'long-form research and technical writing' },
+      { label: 'datasets', slug: 'datasets', blurb: 'datasets i compile and release' },
+      { label: 'tools & demos', slug: 'tools-and-demos', blurb: 'interactive demos you can run in the browser' },
     ],
   },
   {
-    label: 'Linguistics',
+    label: 'linguisti(k)s',
+    name: 'linguistics',
     slug: 'linguistics',
-    blurb: 'Pure linguistics — study and research, such as translation analysis of Harry Potter.',
+    blurb:
+      'reading notes and close analysis, from sociolinguistics to the translation of books, journals, and more.',
     accent: '#e736d3',
-    icon: '📖',
     children: [
-      { label: 'Readings', slug: 'readings', blurb: 'Reading notes and literature reviews.' },
-      { label: 'Analysis', slug: 'analysis', blurb: 'Close analysis of language and translation.' },
+      { label: 'readings', slug: 'readings', blurb: 'reading notes and literature reviews' },
+      { label: 'analysis', slug: 'analysis', blurb: 'close analysis of language and translation' },
     ],
   },
   {
-    label: 'Music',
+    label: 'musi(k)',
+    name: 'music',
     slug: 'music',
-    blurb: 'Performance videos, choir and covers, and future original work.',
+    blurb:
+      'the performances I take part in, choir and casual covers, the occasional critique, and future original work.',
     accent: '#b42ed0',
-    icon: '🎵',
     children: [
-      { label: 'Solo', slug: 'solo', blurb: 'Solo singing and playing.' },
-      { label: 'Choir', slug: 'choir', blurb: 'Choir works and performances.' },
-      { label: 'Casual Cover', slug: 'casual-cover', blurb: 'Casual covers.' },
-      { label: 'Critique', slug: 'critique', blurb: 'Music critique and appreciation.' },
+      { label: 'solo', slug: 'solo', blurb: 'solo singing and playing' },
+      { label: 'choir', slug: 'choir', blurb: 'choir works and performances' },
+      { label: 'casual cover', slug: 'casual-cover', blurb: 'casual covers' },
+      { label: 'critique', slug: 'critique', blurb: 'music critique and appreciation' },
     ],
   },
 ];
@@ -72,4 +86,16 @@ export function getSubSection(sectionSlug: string, subSlug: string) {
   const section = getSection(sectionSlug);
   const sub = section?.children.find((c) => c.slug === subSlug);
   return section && sub ? { section, sub } : undefined;
+}
+
+// Date format: "YYYY Mon DD". Months are abbreviated, except May/June/July
+// (written in full) and September (written as "Sept").
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+
+export function formatDate(iso: string): string {
+  const d = new Date(iso);
+  const year = d.getUTCFullYear();
+  const month = MONTHS[d.getUTCMonth()];
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${year} ${month} ${day}`;
 }

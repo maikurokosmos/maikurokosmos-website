@@ -7,7 +7,7 @@ const year = new Date().getFullYear();
   <div class="container footer-grid">
     <div class="footer-brand">
       <img src="/images/logo-dark.svg" alt="maikurokosmos" height="28" />
-      <p>Tech · Linguistics · Music</p>
+      <p>tech · linguistics · music</p>
     </div>
 
     <nav class="footer-nav" aria-label="页脚导航">
@@ -26,7 +26,7 @@ const year = new Date().getFullYear();
         ))
       }
       <div class="footer-col">
-        <a class="footer-head" href="/about">About</a>
+        <a class="footer-head" href="/about">about</a>
       </div>
     </nav>
   </div>
@@ -63,18 +63,21 @@ const year = new Date().getFullYear();
   }
   .footer-head {
     display: inline-block;
-    color: #fff;
+    font-family: var(--font-display);
+    color: #ffffff;
     font-weight: 700;
-    margin-bottom: 12px;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
   }
   .footer-head:hover { color: var(--c-pink); }
   .footer-col ul { list-style: none; margin: 0; padding: 0; }
   .footer-col li { margin-bottom: 8px; }
-  .footer-col a {
-    color: rgba(255, 255, 255, 0.66);
+  .footer-col ul a {
+    color: rgba(255, 255, 255, 0.45);
     font-size: 0.9rem;
+    font-weight: 400;
   }
-  .footer-col a:hover { color: #fff; }
+  .footer-col ul a:hover { color: #fff; }
 
   .footer-bottom {
     display: flex;

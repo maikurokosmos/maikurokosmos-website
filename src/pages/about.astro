@@ -3,29 +3,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SECTIONS } from '../config/site';
 ---
 
-<BaseLayout title="About" description="About maikurokosmos.">
+<BaseLayout title="about" description="About maikurokosmos.">
   <section class="about">
     <div class="container about-grid">
       <div class="about-text">
-        <span class="eyebrow">About</span>
-        <h1>About me</h1>
+        <span class="eyebrow">about</span>
+        <h1>about me</h1>
         <p class="lead">
           Hi, I'm maikurokosmos. This site is where I collect and share things
           across the three areas I keep coming back to.
         </p>
         <p>
-          This is placeholder copy for now — you can replace it with a real
+          This is placeholder copy for now. You can replace it with a real
           introduction later: your research interests, what you're working on,
           how to get in touch, and so on.
         </p>
 
-        <h2>What I write about</h2>
+        <h2>what i write about</h2>
         <ul class="about-list">
           {
             SECTIONS.map((section) => (
               <li>
                 <a href={`/${section.slug}`}><strong>{section.label}</strong></a>
-                {' — '}{section.blurb}
+                {': '}{section.blurb}
               </li>
             ))
           }

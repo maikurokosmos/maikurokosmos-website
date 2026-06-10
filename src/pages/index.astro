@@ -1,40 +1,51 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SECTIONS, getSection } from '../config/site';
+import { Icon } from 'astro-icon/components';
+import { SECTIONS, getSection, SOCIALS, formatDate } from '../config/site';
 
 // —— Latest updates (placeholder data; will be replaced by real posts via Content Collections) ——
 const latest = [
-  { title: 'Sample: the title of a long-form tech research post', section: 'tech', date: '2026-06-01', href: '/tech/writings' },
-  { title: 'Sample: translation analysis of a spell in Harry Potter', section: 'linguistics', date: '2026-05-20', href: '/linguistics/analysis' },
-  { title: 'Sample: live video from a choir performance', section: 'music', date: '2026-05-08', href: '/music/choir' },
+  { title: 'sample: the title of a long-form tech research post', section: 'tech', date: '2026-06-01', href: '/tech/writings' },
+  { title: 'sample: translation analysis of a spell in harry potter', section: 'linguistics', date: '2026-05-20', href: '/linguistics/analysis' },
+  { title: 'sample: live video from a choir performance', section: 'music', date: '2026-05-08', href: '/music/choir' },
 ];
 
 // Big slogan repeated for the strip (static for now, motion-ready)
-const slogan = 'Tech / Linguistics / Music / ';
+const slogan = 'AI CONTROL RESEARCH ✦ LINGUISTIC LEARNING & SHARING ✦ MUSIC PORTFOLIO ✦ ';
 ---
 
 <BaseLayout>
   <!-- ===================== Hero ===================== -->
   <section class="hero">
     <div class="container hero-inner">
-      <h1 class="hero-title">Research, language, and&nbsp;music.</h1>
+      <h1 class="hero-title">from sounds,<br />from text,<br />for human</h1>
       <p class="hero-intro">
-        Hi, I'm <strong>maikurokosmos</strong>. I publish
-        <strong>technical writing</strong> and datasets, study
-        <strong>linguistics</strong>, and share the <strong>music</strong>
-        I make and perform. Welcome — have a look around.
+        Hi, and welcome to Kaiyu's personal hub, <strong>“maikurokosmos”</strong>.
+        I'm sharing a few things here: my independent research on
+        <strong>AI safety and control</strong> (especially the bias embedded in
+        AI), my learning in <strong>(socio-)linguistics</strong>, and my own work
+        in <strong>music</strong>, including the events I take part in, the songs
+        I cover, and the occasional music critique. Feel free to reach out, or
+        follow me on my other social media!
       </p>
       <div class="hero-actions">
-        <a class="btn btn--primary" href="/about">About me →</a>
-        <a class="btn btn--ghost" href="#sections">Explore</a>
+        <a class="btn btn--primary" href="/about">about me</a>
+        <a class="btn btn--ghost" href="#sections">explore</a>
+      </div>
+      <div class="hero-socials">
+        {SOCIALS.map((s) => (
+          <a class="social-link" href={s.href} aria-label={s.label}>
+            <Icon name={s.icon} />
+          </a>
+        ))}
       </div>
     </div>
 
     <!-- Big slogan strip — static now; flip on the animation later for a right-to-left marquee -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee__track">
-        <span>{slogan.repeat(4)}</span>
-        <span>{slogan.repeat(4)}</span>
+        <span>{slogan.repeat(2)}</span>
+        <span>{slogan.repeat(2)}</span>
       </div>
     </div>
   </section>
@@ -43,19 +54,18 @@ const slogan = 'Tech / Linguistics / Music / ';
   <section class="section section--alt" id="sections">
     <div class="container">
       <span class="eyebrow">Sections</span>
-      <h2>What's here</h2>
+      <h2>what's here</h2>
       <div class="sections-grid">
         {
           SECTIONS.map((section) => (
             <a class="card section-card" href={`/${section.slug}`} style={`border-top-color:${section.accent}`}>
               <h3>{section.label}</h3>
-              <p>{section.blurb}</p>
+              <p><strong>{section.name}</strong>: {section.blurb}</p>
               <div class="section-tags">
                 {section.children.map((c) => (
                   <span class="tag">{c.label}</span>
                 ))}
               </div>
-              <span class="section-link" style={`color:${section.accent}`}>Enter →</span>
             </a>
           ))
         }
@@ -67,7 +77,7 @@ const slogan = 'Tech / Linguistics / Music / ';
   <section class="section">
     <div class="container">
       <span class="eyebrow">Latest</span>
-      <h2>Recent updates</h2>
+      <h2>recent updates</h2>
       <ul class="updates">
         {
           latest.map((item) => {
@@ -75,16 +85,16 @@ const slogan = 'Tech / Linguistics / Music / ';
             return (
               <li>
                 <a class="update-row" href={item.href}>
-                  <span class="update-tag" style={`background:${sec.accent}`}>{sec.label}</span>
+                  <span class="update-tag" style={`background:${sec.accent}`}>{sec.name}</span>
                   <span class="update-title">{item.title}</span>
-                  <time class="update-date">{item.date}</time>
+                  <time class="update-date">{formatDate(item.date)}</time>
                 </a>
               </li>
             );
           })
         }
       </ul>
-      <p class="latest-note">(Placeholder examples — real posts will appear here once published.)</p>
+      <p class="latest-note">(Placeholder examples for now; real posts will appear here once published.)</p>
     </div>
   </section>
 </BaseLayout>
@@ -101,19 +111,29 @@ const slogan = 'Tech / Linguistics / Music / ';
     padding-block: 84px 52px;
   }
   .hero-title {
-    font-size: clamp(2.8rem, 6vw, 4.6rem);
-    line-height: 1.02;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.05;
     margin-bottom: 22px;
     max-width: 14em;
   }
   .hero-intro {
-    font-size: 1.15rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
     color: var(--c-text);
-    max-width: 34em;
+    max-width: 36em;
     margin-bottom: 28px;
   }
   .hero-intro strong { color: var(--c-ink); }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero-socials { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 26px; }
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--c-ink);
+    transition: color 0.18s ease, transform 0.18s ease;
+  }
+  .social-link:hover { color: var(--c-purple); transform: translateY(-2px); }
+  .social-link :global(svg) { width: 24px; height: 24px; }
 
   /* —— Big slogan strip (full-bleed). Static now; motion comes later. —— */
   .marquee {
@@ -125,7 +145,7 @@ const slogan = 'Tech / Linguistics / Music / ';
   .marquee__track {
     display: flex;
     width: max-content;
-    animation: marquee 34s linear infinite;
+    animation: marquee 40s linear infinite;
   }
   /* pause on hover */
   .marquee:hover .marquee__track { animation-play-state: paused; }
@@ -142,32 +162,33 @@ const slogan = 'Tech / Linguistics / Music / ';
     to { transform: translateX(-50%); }
   }
 
-  /* —— section cards (no icon; accent top border; ready for background art later) —— */
+  /* —— section cards (bigger; accent top border; ready for background art later) —— */
   .sections-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 28px;
+    gap: 28px;
+    margin-top: 32px;
   }
   .section-card {
     display: flex;
     flex-direction: column;
-    padding: 26px 28px;
+    padding: 34px 32px;
     color: var(--c-text);
     border-top: 3px solid var(--c-border);
   }
-  .section-card h3 { margin-bottom: 8px; }
-  .section-card p { color: var(--c-muted); font-size: 0.95rem; }
-  .section-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 18px; }
+  .section-card h3 { margin-bottom: 12px; font-size: 1.5rem; }
+  .section-card p { color: var(--c-muted); font-size: 1rem; line-height: 1.6; margin: 0; }
+  .section-card p strong { color: var(--c-ink); font-weight: 700; }
+  .section-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; }
   .tag {
-    font-size: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
     color: var(--c-purple);
     background: var(--c-bg-alt);
     border: 1px solid var(--c-border);
-    padding: 3px 9px;
+    padding: 4px 10px;
     border-radius: 999px;
   }
-  .section-link { margin-top: auto; font-weight: 600; font-size: 0.9rem; }
 
   /* —— recent updates: list —— */
   .updates {

@@ -199,7 +199,11 @@ package.json
 
 - **整体基调**：浅色。Hero 区用淡紫背景（`--c-hero: #f1e9fb`）。
 - **纯色，无渐变** ⚠️：全站**不使用任何渐变填充**，所有颜色为纯色（站主明确要求）。按钮、标签、语言键等均为品牌纯色。
-- **标题字体**：**Unbounded**（开源 OFL、`@fontsource-variable/unbounded` 自托管、几何 quirky），变量 `--font-display`，用于所有标题与大字 slogan；正文用系统字体栈 `--font-sans`。
+- **字体策略**：**Unbounded**（`--font-display`，自托管）用于"显示/标签"类元素——标题、导航、卡片标签、按钮、页脚板块名、大字 slogan；**Noto Sans**（`--font-sans`，自托管）用于"阅读"类文本——正文、描述、子菜单、列表等。
+- **大小写约定**：标题与多数文字**全小写**（呼应 logo）；仅 eyebrow 小标签（`SECTIONS`、`LATEST`）和大字 slogan 用大写。
+- **板块命名玩法**：板块标题用 c→k 风格化（**te(k)h / linguisti(k)s / musi(k)**），介绍里用正确拼写加粗消歧（**tech** / **linguistics** / **music**）；URL slug 保持正确（`/tech` 等）。`site.ts` 里 `label`=风格化、`name`=正确拼写。
+- **日期格式**：`YYYY Mon DD`，月份缩写，但 May/June/July 写全、9 月用 `Sept`（见 `site.ts` 的 `formatDate`）。
+- **社交链接**：hero 按钮下方，圆角方形图标（`astro-icon` + `simple-icons`）；链接见 `site.ts` 的 `SOCIALS`，href 待填真实 URL。
 - **大字 slogan**：Hero 下方一条超大 slogan（淡紫 `--c-slogan: #c2a6ea`），跑马灯**从右向左滚动**（`.marquee` / `@keyframes marquee`，34s，鼠标悬停暂停）。受 `prefers-reduced-motion` 控制，会为偏好减少动效的用户自动静止。
 - **动效**：slogan 跑马灯已启用。其余动效（滚动淡入等）仍待规划。
 - **插图规划**：Hero 配图与三张板块卡片**将来都换成 AI 手绘风背景插图**。当前 Hero 无配图占位；板块卡片为纯文字 + 顶部彩色边（已去掉早期的 emoji 图标）。

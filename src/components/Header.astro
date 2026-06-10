@@ -5,7 +5,7 @@ import { SECTIONS } from '../config/site';
 <header class="site-header">
   <div class="container nav-bar">
     <a class="brand" href="/" aria-label="maikurokosmos home">
-      <img src="/images/logo.svg" alt="maikurokosmos" height="30" />
+      <img src="/images/logo.svg" alt="maikurokosmos" height="40" />
     </a>
 
     <button
@@ -19,7 +19,7 @@ import { SECTIONS } from '../config/site';
 
     <nav class="nav" id="primary-nav" aria-label="Primary">
       <ul class="nav-list">
-        <li><a class="nav-top" href="/about">About</a></li>
+        <li><a class="nav-top" href="/about">about</a></li>
 
         {
           SECTIONS.map((section) => (
@@ -28,7 +28,7 @@ import { SECTIONS } from '../config/site';
                 <a class="nav-top" href={`/${section.slug}`}>{section.label}</a>
                 <button
                   class="submenu-toggle"
-                  aria-label={`Expand ${section.label} submenu`}
+                  aria-label={`Expand ${section.name} submenu`}
                   aria-expanded="false"
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
@@ -92,6 +92,8 @@ import { SECTIONS } from '../config/site';
     list-style: none;
     margin: 0;
     padding: 0;
+    /* logo 的 maikurokosmos 文字在画布中偏下，导航整体下移 4.7px 与其光学中心对齐 */
+    transform: translateY(4.7px);
   }
   .nav-top {
     display: inline-flex;
@@ -99,8 +101,9 @@ import { SECTIONS } from '../config/site';
     padding: 8px 14px;
     border-radius: 10px;
     color: var(--c-ink);
-    font-weight: 600;
-    font-size: 0.95rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
   }
   .nav-top:hover { color: var(--c-purple); background: var(--c-bg-alt); }
 
@@ -167,7 +170,7 @@ import { SECTIONS } from '../config/site';
     color: var(--c-ink);
   }
   .dropdown a:hover { background: var(--c-bg-alt); }
-  .dd-label { display: block; font-weight: 600; font-size: 0.92rem; }
+  .dd-label { display: block; font-family: var(--font-display); font-weight: 600; font-size: 0.92rem; }
   .dd-blurb { display: block; font-size: 0.8rem; color: var(--c-muted); margin-top: 2px; }
 
   /* —— hamburger button —— */
@@ -209,7 +212,7 @@ import { SECTIONS } from '../config/site';
     }
     .site-header.nav-open .nav { transform: translateX(0); }
 
-    .nav-list { flex-direction: column; align-items: stretch; gap: 2px; }
+    .nav-list { flex-direction: column; align-items: stretch; gap: 2px; transform: none; }
     .nav-row { justify-content: space-between; }
     .nav-top { flex: 1; font-size: 1.1rem; padding: 14px; }
 
