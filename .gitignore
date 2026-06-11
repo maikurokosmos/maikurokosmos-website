@@ -22,3 +22,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# design source files (keep only exported PNG/SVG in the repo)
+design/
+*.ai
+*.psd

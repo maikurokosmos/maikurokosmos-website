@@ -13,9 +13,14 @@ if (!section) throw new Error(`未知板块：${slug}`);
 
 <BaseLayout title={section.name} description={section.blurb}>
   <section class="section-hero">
-    <div class="container">
-      <h1>{section.label}</h1>
-      <p class="lead"><strong>{section.name}</strong>: {section.blurb}</p>
+    <div class="container section-hero-grid">
+      <div class="section-hero-text">
+        <h1>{section.label}</h1>
+        <p class="lead"><strong>{section.name}</strong>: {section.blurb}</p>
+      </div>
+      <div class="section-hero-art">
+        <img src={section.image} alt="" />
+      </div>
     </div>
   </section>
 
@@ -37,12 +42,24 @@ if (!section) throw new Error(`未知板块：${slug}`);
 
 <style>
   .section-hero {
-    padding-block: 64px 28px;
+    padding-block: 48px 28px;
     background: var(--c-hero);
     border-bottom: 1px solid var(--c-border);
   }
-  .lead { font-family: var(--font-display); font-size: 1.05rem; color: var(--c-muted); max-width: 46em; }
+  .section-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.92fr;
+    align-items: center;
+    gap: 32px;
+  }
+  .section-hero-art img { width: 100%; height: auto; }
+  .lead { font-family: var(--font-display); font-size: 1.05rem; color: var(--c-muted); max-width: 40em; }
   .lead strong { color: var(--c-ink); font-weight: 700; }
+
+  @media (max-width: 760px) {
+    .section-hero-grid { grid-template-columns: 1fr; gap: 20px; }
+    .section-hero-art { max-width: 380px; }
+  }
 
   .sub-grid {
     display: grid;

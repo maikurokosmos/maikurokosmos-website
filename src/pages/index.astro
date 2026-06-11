@@ -17,7 +17,8 @@ const slogan = 'AI CONTROL RESEARCH ✦ LINGUISTIC LEARNING & SHARING ✦ MUSIC 
 <BaseLayout>
   <!-- ===================== Hero ===================== -->
   <section class="hero">
-    <div class="container hero-inner">
+    <div class="container hero-grid">
+      <div class="hero-text">
       <h1 class="hero-title">from sounds,<br />from text,<br />for human</h1>
       <p class="hero-intro">
         Hi, and welcome to Kaiyu's personal hub, <strong>“maikurokosmos”</strong>.
@@ -38,6 +39,13 @@ const slogan = 'AI CONTROL RESEARCH ✦ LINGUISTIC LEARNING & SHARING ✦ MUSIC 
             <Icon name={s.icon} />
           </a>
         ))}
+        </div>
+      </div>
+      <div class="hero-visual">
+        <svg class="hero-blob" viewBox="0 0 180 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M16,52 C19,41 131,12 150,18 C169,24 154,80 132,86 C110,92 13,63 16,52 Z" fill="#e3d3f5" />
+        </svg>
+        <img src="/images/hero.svg" alt="Illustration of a person working at a laptop, with a microphone, plants, and small UI cards" />
       </div>
     </div>
 
@@ -58,14 +66,18 @@ const slogan = 'AI CONTROL RESEARCH ✦ LINGUISTIC LEARNING & SHARING ✦ MUSIC 
       <div class="sections-grid">
         {
           SECTIONS.map((section) => (
-            <a class="card section-card" href={`/${section.slug}`} style={`border-top-color:${section.accent}`}>
-              <h3>{section.label}</h3>
-              <p><strong>{section.name}</strong>: {section.blurb}</p>
-              <div class="section-tags">
-                {section.children.map((c) => (
-                  <span class="tag">{c.label}</span>
-                ))}
+            <a class="card section-card" href={`/${section.slug}`} data-pos={section.imagePos} style={`border-top-color:${section.accent}`}>
+              <div class="section-card-body">
+                <h3>{section.label}</h3>
+                <span class="card-chip" style={`background:${section.accent}`}>{section.name}</span>
+                <p>{section.blurb}</p>
+                <div class="section-tags">
+                  {section.children.map((c) => (
+                    <span class="tag">{c.label}</span>
+                  ))}
+                </div>
               </div>
+              <img class="section-card-art" src={section.image} alt="" />
             </a>
           ))
         }
@@ -107,8 +119,27 @@ const slogan = 'AI CONTROL RESEARCH ✦ LINGUISTIC LEARNING & SHARING ✦ MUSIC 
     background: var(--c-hero);
     padding-bottom: 6px;
   }
-  .hero-inner {
-    padding-block: 84px 52px;
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    align-items: center;
+    gap: 40px;
+    padding-block: 64px 52px;
+  }
+  .hero-visual {
+    position: relative;
+  }
+  /* rounded-triangle purple shape behind the illustration (a touch darker than the lavender hero) */
+  .hero-blob {
+    position: absolute;
+    inset: -16% -12%;
+    z-index: 0;
+  }
+  .hero-visual img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: auto;
   }
   .hero-title {
     font-size: clamp(2rem, 4vw, 3.4rem);
@@ -170,15 +201,47 @@ const slogan = 'AI CONTROL RESEARCH ✦ LINGUISTIC LEARNING & SHARING ✦ MUSIC 
     margin-top: 32px;
   }
   .section-card {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding: 34px 32px;
+    padding: 30px;
+    min-height: 300px;
     color: var(--c-text);
     border-top: 3px solid var(--c-border);
   }
-  .section-card h3 { margin-bottom: 12px; font-size: 1.5rem; }
-  .section-card p { color: var(--c-muted); font-size: 1rem; line-height: 1.6; margin: 0; }
-  .section-card p strong { color: var(--c-ink); font-weight: 700; }
+  .section-card-body { position: relative; z-index: 1; }
+  /* large, faded illustration behind the text (intentionally overlaps) */
+  .section-card-art {
+    position: absolute;
+    width: 120%;
+    opacity: 0.22;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .section-card[data-pos="left"] .section-card-art { left: -22%; bottom: 2%; }
+  .section-card[data-pos="right"] .section-card-art { right: -22%; bottom: 2%; }
+  .section-card[data-pos="center"] .section-card-art { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  .section-card h3 { margin-bottom: 6px; font-size: 1.5rem; }
+  .card-chip {
+    display: inline-block;
+    margin: 0 0 14px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .section-card p {
+    font-family: var(--font-display);
+    color: var(--c-ink);
+    font-weight: 400;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+  }
   .section-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; }
   .tag {
     font-family: var(--font-display);
@@ -225,7 +288,7 @@ const slogan = 'AI CONTROL RESEARCH ✦ LINGUISTIC LEARNING & SHARING ✦ MUSIC 
 
   /* —— responsive —— */
   @media (max-width: 900px) {
-    .hero-inner { padding-block: 52px 40px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 28px; padding-block: 40px; }
     .sections-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {

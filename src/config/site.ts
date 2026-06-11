@@ -18,6 +18,10 @@ export interface Section {
   /** Plain description (no markup); the correct name is bolded separately at render time */
   blurb: string;
   accent: string;
+  /** Section illustration (PNG in public/images) */
+  image: string;
+  /** Horizontal focus of the faded background illustration on the homepage card */
+  imagePos: 'left' | 'right' | 'center';
   children: SubSection[];
 }
 
@@ -44,6 +48,8 @@ export const SECTIONS: Section[] = [
     blurb:
       'independent research on AI safety and control, dataset releases, and interactive demos you can run right in the browser.',
     accent: '#881ed3',
+    image: '/images/tekh.png',
+    imagePos: 'left',
     children: [
       { label: 'writings', slug: 'writings', blurb: 'long-form research and technical writing' },
       { label: 'datasets', slug: 'datasets', blurb: 'datasets i compile and release' },
@@ -57,6 +63,8 @@ export const SECTIONS: Section[] = [
     blurb:
       'reading notes and close analysis, from sociolinguistics to the translation of books, journals, and more.',
     accent: '#e736d3',
+    image: '/images/linguistiks.png',
+    imagePos: 'right',
     children: [
       { label: 'readings', slug: 'readings', blurb: 'reading notes and literature reviews' },
       { label: 'analysis', slug: 'analysis', blurb: 'close analysis of language and translation' },
@@ -69,6 +77,8 @@ export const SECTIONS: Section[] = [
     blurb:
       'the performances I take part in, choir and casual covers, the occasional critique, and future original work.',
     accent: '#b42ed0',
+    image: '/images/musik.png',
+    imagePos: 'center',
     children: [
       { label: 'solo', slug: 'solo', blurb: 'solo singing and playing' },
       { label: 'choir', slug: 'choir', blurb: 'choir works and performances' },
