@@ -1,10 +1,14 @@
 ---
-import { SECTIONS } from '../config/site';
+import { SECTIONS, secLabel, subLabel, subBlurb } from '../config/site';
+import { getLangFromUrl, useTranslations, localizedHref, switchLocalePath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <header class="site-header">
   <div class="container nav-bar">
-    <a class="brand" href="/" aria-label="maikurokosmos home">
+    <a class="brand" href={localizedHref('/', lang)} aria-label="maikurokosmos home">
       <img src="/images/logo.svg" alt="maikurokosmos" height="40" />
     </a>
 
@@ -19,13 +23,13 @@ import { SECTIONS } from '../config/site';
 
     <nav class="nav" id="primary-nav" aria-label="Primary">
       <ul class="nav-list">
-        <li><a class="nav-top" href="/about">about</a></li>
+        <li><a class="nav-top" href={localizedHref('/about', lang)}>{t('nav.about')}</a></li>
 
         {
           SECTIONS.map((section) => (
             <li class="has-dropdown">
               <div class="nav-row">
-                <a class="nav-top" href={`/${section.slug}`}>{section.label}</a>
+                <a class="nav-top" href={localizedHref(`/${section.slug}`, lang)}>{secLabel(section, lang)}</a>
                 <button
                   class="submenu-toggle"
                   aria-label={`Expand ${section.name} submenu`}
@@ -40,9 +44,9 @@ import { SECTIONS } from '../config/site';
               <ul class="dropdown">
                 {section.children.map((child) => (
                   <li>
-                    <a href={`/${section.slug}/${child.slug}`}>
-                      <span class="dd-label">{child.label}</span>
-                      <span class="dd-blurb">{child.blurb}</span>
+                    <a href={localizedHref(`/${section.slug}/${child.slug}`, lang)}>
+                      <span class="dd-label">{subLabel(child, lang)}</span>
+                      <span class="dd-blurb">{subBlurb(child, lang)}</span>
                     </a>
                   </li>
                 ))}
@@ -52,8 +56,8 @@ import { SECTIONS } from '../config/site';
         }
 
         <li class="lang-switch" role="group" aria-label="Language">
-          <span class="lang lang--active" aria-current="true">EN</span>
-          <span class="lang lang--disabled" title="Chinese version coming soon" aria-disabled="true">中</span>
+          <a class:list={['lang', { 'lang--active': lang === 'en' }]} href={switchLocalePath(Astro.url, 'en')} aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+          <a class:list={['lang', { 'lang--active': lang === 'zh' }]} href={switchLocalePath(Astro.url, 'zh')} aria-current={lang === 'zh' ? 'true' : undefined}>中</a>
         </li>
       </ul>
     </nav>
@@ -136,8 +140,10 @@ import { SECTIONS } from '../config/site';
     border-radius: 999px;
     color: var(--c-muted);
   }
-  .lang--active { background: var(--c-purple); color: #fff; }
-  .lang--disabled { cursor: not-allowed; opacity: 0.55; }
+  .lang { text-decoration: none; cursor: pointer; }
+  .lang:hover { color: var(--c-ink); }
+  .lang--active,
+  .lang--active:hover { background: var(--c-purple); color: #fff; }
 
   /* —— desktop dropdown —— */
   .dropdown {

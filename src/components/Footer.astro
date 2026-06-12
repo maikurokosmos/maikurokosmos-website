@@ -1,24 +1,27 @@
 ---
-import { SECTIONS } from '../config/site';
+import { SECTIONS, secLabel, subLabel } from '../config/site';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
 const year = new Date().getFullYear();
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-brand">
       <img src="/images/logo-dark.svg" alt="maikurokosmos" height="28" />
-      <p>tech · linguistics · music</p>
+      <p>{t('footer.tagline')}</p>
     </div>
 
     <nav class="footer-nav" aria-label="Footer navigation">
       {
         SECTIONS.map((section) => (
           <div class="footer-col">
-            <a class="footer-head" href={`/${section.slug}`}>{section.label}</a>
+            <a class="footer-head" href={localizedHref(`/${section.slug}`, lang)}>{secLabel(section, lang)}</a>
             <ul>
               {section.children.map((child) => (
                 <li>
-                  <a href={`/${section.slug}/${child.slug}`}>{child.label}</a>
+                  <a href={localizedHref(`/${section.slug}/${child.slug}`, lang)}>{subLabel(child, lang)}</a>
                 </li>
               ))}
             </ul>
@@ -26,7 +29,7 @@ const year = new Date().getFullYear();
         ))
       }
       <div class="footer-col">
-        <a class="footer-head" href="/about">about</a>
+        <a class="footer-head" href={localizedHref('/about', lang)}>{t('footer.about')}</a>
       </div>
     </nav>
   </div>

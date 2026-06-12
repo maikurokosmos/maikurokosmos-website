@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getSubSection } from '../config/site';
+import { getSubSection, secLabel, subLabel, subBlurb } from '../config/site';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
 
 interface Props {
   sectionSlug: string;
@@ -11,26 +12,29 @@ const { sectionSlug, subSlug } = Astro.props;
 const found = getSubSection(sectionSlug, subSlug);
 if (!found) throw new Error(`Unknown subsection: ${sectionSlug}/${subSlug}`);
 const { section, sub } = found;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
-<BaseLayout title={`${sub.label} · ${section.label}`} description={sub.blurb}>
+<BaseLayout title={`${subLabel(sub, lang)} · ${secLabel(section, lang)}`} description={subBlurb(sub, lang)}>
   <section class="ph">
     <div class="container">
       <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a>
+        <a href={localizedHref('/', lang)}>{t('crumb.home')}</a>
         <span>/</span>
-        <a href={`/${section.slug}`}>{section.label}</a>
+        <a href={localizedHref(`/${section.slug}`, lang)}>{secLabel(section, lang)}</a>
         <span>/</span>
-        <span aria-current="page">{sub.label}</span>
+        <span aria-current="page">{subLabel(sub, lang)}</span>
       </nav>
 
-      <h1>{sub.label}</h1>
-      <p class="lead">{sub.blurb}</p>
+      <h1>{subLabel(sub, lang)}</h1>
+      <p class="lead">{subBlurb(sub, lang)}</p>
 
       <div class="card ph-card" style={`--accent:${section.accent}`}>
-        <span class="ph-badge" style={`background:${section.accent}`}>Coming soon</span>
-        <p>This subsection is being prepared. Posts and works will appear here once published.</p>
-        <a class="btn btn--ghost" href={`/${section.slug}`}>← Back to {section.label}</a>
+        <span class="ph-badge" style={`background:${section.accent}`}>{t('common.comingSoon')}</span>
+        <p>{t('ph.body')}</p>
+        <a class="btn btn--ghost" href={localizedHref(`/${section.slug}`, lang)}>← {t('ph.back')} {secLabel(section, lang)}</a>
       </div>
     </div>
   </section>

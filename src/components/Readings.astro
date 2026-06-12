@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSection, secLabel, formatDate } from '../config/site';
+import { READING_SERIES, CASUAL_NOTES } from '../config/readings';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const section = getSection('linguistics')!;
+const accent = section.accent;
+---
+
+<BaseLayout title={`${t('readings.title')} · ${secLabel(section, lang)}`} description={t('readings.lead')}>
+  <section class="rd">
+    <div class="container">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href={localizedHref('/', lang)}>{t('crumb.home')}</a><span aria-hidden="true">/</span>
+        <a href={localizedHref('/linguistics', lang)}>{secLabel(section, lang)}</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{t('readings.title')}</span>
+      </nav>
+
+      <span class="eyebrow">{t('readings.title')}</span>
+      <h1>{t('readings.title')}</h1>
+      <p class="lead">{t('readings.lead')}</p>
+
+      <!-- ===== series ===== -->
+      <h2 class="block-head">{t('readings.series')}</h2>
+      <div class="series-grid">
+        {READING_SERIES.map((s) => {
+          const title = lang === 'zh' ? s.titleZh : s.titleEn;
+          const tags = lang === 'zh' ? s.tagsZh : s.tags;
+          const chip = lang === 'zh' ? `${t('readings.series')} · ${s.books} 本书` : `${t('readings.series')} · ${s.books} books`;
+          return (
+            <a class="card series-card" href={localizedHref(s.href, lang)} style={`border-top-color:${accent}`}>
+              <span class="series-chip" style={`background:${accent}`}>{chip}</span>
+              <h3 class="series-title">{title}</h3>
+              {tags.length > 0 && (
+                <div class="tag-row">{tags.map((tg) => <span class="tag">{tg}</span>)}</div>
+              )}
+              <span class="series-go">{t('readings.openSeries')}</span>
+            </a>
+          );
+        })}
+      </div>
+
+      <!-- ===== casual notes ===== -->
+      <h2 class="block-head">{t('readings.casual')}</h2>
+      <ul class="notes">
+        {CASUAL_NOTES.map((n) => {
+          const title = lang === 'zh' ? n.titleZh : n.titleEn;
+          const tags = lang === 'zh' ? n.tagsZh : n.tags;
+          return (
+            <li>
+              <a class="note-row" href={n.href ?? '#'}>
+                <div class="note-main">
+                  <span class="note-title">{title}</span>
+                  <time class="note-date">{formatDate(n.date, lang)}</time>
+                </div>
+                {tags.length > 0 && (
+                  <div class="tag-row note-tags">{tags.map((tg) => <span class="tag tag--sm">{tg}</span>)}</div>
+                )}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rd { padding-block: 56px; }
+  .crumbs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.88rem; color: var(--c-muted); margin-bottom: 20px; }
+  .crumbs a { color: var(--c-muted); }
+  .crumbs a:hover { color: var(--c-purple); }
+  .lead { font-size: 1.05rem; color: var(--c-muted); max-width: 42em; }
+
+  .block-head { font-size: 1.3rem; margin: 44px 0 18px; }
+
+  /* —— tags (shared look) —— */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    color: var(--c-purple);
+    background: var(--c-bg-alt);
+    border: 1px solid var(--c-border);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .tag--sm { font-size: 0.68rem; padding: 3px 9px; }
+
+  /* —— series cards —— */
+  .series-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  .series-card {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    color: var(--c-text);
+    border-top: 3px solid var(--c-border);
+    min-height: 220px;
+  }
+  .series-chip {
+    align-self: flex-start;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .series-title { font-size: 1.2rem; line-height: 1.2; margin: 0 0 14px; }
+  .series-go { margin-top: auto; padding-top: 18px; font-family: var(--font-display); font-size: 0.85rem; color: var(--c-purple); }
+
+  /* —— casual notes list —— */
+  .notes { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--c-border); }
+  .note-row {
+    display: block;
+    padding: 16px 6px;
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-text);
+    transition: background 0.15s ease;
+  }
+  .note-row:hover { background: var(--c-bg-alt); }
+  .note-main { display: flex; align-items: baseline; gap: 16px; }
+  .note-title { flex: 1 1 auto; font-weight: 600; color: var(--c-ink); font-size: 1.02rem; }
+  .note-date { flex: 0 0 auto; font-size: 0.85rem; color: var(--c-muted); font-variant-numeric: tabular-nums; }
+  .note-tags { margin-top: 8px; }
+
+  @media (max-width: 640px) {
+    .note-main { flex-wrap: wrap; gap: 4px; }
+    .note-date { width: 100%; }
+  }
+</style>

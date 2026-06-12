@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { HP_SERIES, getHPBook } from '../config/harry-potter';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+
+interface Props {
+  entryId: string;
+}
+
+const { entryId } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const entry = (await getCollection('harryPotter')).find((e) => e.id === entryId)!;
+const { Content, headings } = await render(entry);
+
+const book = getHPBook(entry.data.book!);
+const bookTitle = book ? (lang === 'zh' ? book.titleZh : book.titleEn) : '';
+const isChapter = entry.data.kind === 'chapter';
+const kicker = isChapter
+  ? lang === 'zh'
+    ? `${bookTitle} · 第${entry.data.order}章`
+    : `${bookTitle} · chapter ${entry.data.order}`
+  : bookTitle;
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout title={entry.data.title} description={`${lang === 'zh' ? HP_SERIES.titleZh : HP_SERIES.titleEn} · ${bookTitle}`}>
+  <div class="reading-progress" aria-hidden="true"><span id="rp-bar"></span></div>
+
+  <section class="art-hero">
+    <div class="container">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href={localizedHref('/', lang)}>{t('crumb.home')}</a><span aria-hidden="true">/</span>
+        <a href={localizedHref('/linguistics/readings', lang)}>{t('readings.title')}</a><span aria-hidden="true">/</span>
+        <a href={localizedHref(`/linguistics/readings/${HP_SERIES.slug}`, lang)}>harry potter</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{bookTitle}</span>
+      </nav>
+      <p class="art-kicker">{kicker}</p>
+      <h1 class="art-title">{entry.data.title}</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class:list={["container", "art-wrap", { "art-wrap--solo": toc.length === 0 }]}>
+      {toc.length > 0 && (
+        <aside class="toc" aria-label="On this page">
+          <p class="toc-head">{t('hp.onThisPage')}</p>
+          <ul>
+            {toc.map((h) => (
+              <li class={`toc-l${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ul>
+        </aside>
+      )}
+      <article class="prose art-body">
+        <Content />
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const bar = document.getElementById('rp-bar');
+  if (bar) {
+    const update = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      bar.style.width = (max > 0 ? (el.scrollTop / max) * 100 : 0) + '%';
+    };
+    document.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>
+
+<style>
+  .reading-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: transparent; z-index: 60; }
+  #rp-bar { display: block; height: 100%; width: 0; background: var(--c-purple); transition: width 0.08s linear; }
+
+  .art-hero { background: var(--c-hero); padding-block: 40px 26px; border-bottom: 1px solid var(--c-border); }
+  .crumbs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; color: var(--c-muted); margin-bottom: 16px; }
+  .crumbs a { color: var(--c-muted); }
+  .crumbs a:hover { color: var(--c-purple); }
+  .art-kicker { font-family: var(--font-display); font-size: 0.8rem; color: var(--c-purple); margin: 0 0 8px; }
+  .art-title { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.1; margin: 0; }
+
+  .art-wrap { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; align-items: start; }
+  .art-wrap--solo { grid-template-columns: minmax(0, 1fr); }
+  .art-body { max-width: 70ch; }
+
+  .toc { position: sticky; top: calc(var(--header-h) + 20px); font-size: 0.9rem; }
+  .toc-head { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-muted); margin: 0 0 10px; }
+  .toc ul { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--c-border); }
+  .toc li { margin: 0; }
+  .toc a { display: block; padding: 5px 0 5px 14px; margin-left: -2px; color: var(--c-muted); border-left: 2px solid transparent; }
+  .toc a:hover { color: var(--c-purple); border-left-color: var(--c-purple); }
+  .toc-l3 a { padding-left: 26px; font-size: 0.85rem; }
+
+  @media (max-width: 860px) {
+    .art-wrap { grid-template-columns: 1fr; gap: 0; }
+    .toc { display: none; }
+  }
+</style>

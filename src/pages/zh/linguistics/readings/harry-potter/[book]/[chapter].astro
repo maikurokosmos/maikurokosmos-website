@@ -1,10 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
-import HpChapter from '../../../../../components/HpChapter.astro';
+import HpChapter from '../../../../../../components/HpChapter.astro';
 
 export async function getStaticPaths() {
-  const PREFERRED_LANG: 'en' | 'zh' = 'en';
+  const PREFERRED_LANG: 'en' | 'zh' = 'zh';
   const all = await getCollection('harryPotter');
   type Entry = CollectionEntry<'harryPotter'>;
   const groups = new Map<string, Entry[]>();

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getSection } from '../config/site';
+import { getSection, secLabel, secName, secBlurb, subLabel, subBlurb } from '../config/site';
+import { getLangFromUrl, localizedHref } from '../i18n/utils';
 
 interface Props {
   slug: string;
@@ -9,14 +10,17 @@ interface Props {
 const { slug } = Astro.props;
 const section = getSection(slug);
 if (!section) throw new Error(`未知板块：${slug}`);
+
+const lang = getLangFromUrl(Astro.url);
+const sep = lang === 'zh' ? '：' : ': ';
 ---
 
-<BaseLayout title={section.name} description={section.blurb}>
+<BaseLayout title={secName(section, lang)} description={secBlurb(section, lang)}>
   <section class="section-hero">
     <div class="container section-hero-grid">
       <div class="section-hero-text">
-        <h1>{section.label}</h1>
-        <p class="lead"><strong>{section.name}</strong>: {section.blurb}</p>
+        <h1>{secLabel(section, lang)}</h1>
+        <p class="lead"><strong>{secName(section, lang)}</strong>{sep}{secBlurb(section, lang)}</p>
       </div>
       <div class="section-hero-art">
         <img src={section.image} alt="" />
@@ -29,9 +33,9 @@ if (!section) throw new Error(`未知板块：${slug}`);
       <div class="sub-grid">
         {
           section.children.map((sub) => (
-            <a class="card sub-card" href={`/${section.slug}/${sub.slug}`}>
-              <h3>{sub.label}</h3>
-              <p>{sub.blurb}</p>
+            <a class="card sub-card" href={localizedHref(`/${section.slug}/${sub.slug}`, lang)}>
+              <h3>{subLabel(sub, lang)}</h3>
+              <p>{subBlurb(sub, lang)}</p>
             </a>
           ))
         }

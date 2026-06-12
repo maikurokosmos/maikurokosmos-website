@@ -1,0 +1,70 @@
+---
+import { SECTIONS, secLabel, secBlurb } from '../config/site';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const sep = lang === 'zh' ? '：' : ': ';
+---
+
+<section class="about">
+  <div class="container about-grid">
+    <div class="about-text">
+      <span class="eyebrow">{t('about.eyebrow')}</span>
+      <h1>{t('about.title')}</h1>
+      <p class="lead">{t('about.lead')}</p>
+      <p>{t('about.body')}</p>
+
+      <h2>{t('about.whatHeading')}</h2>
+      <ul class="about-list">
+        {
+          SECTIONS.map((section) => (
+            <li>
+              <a href={localizedHref(`/${section.slug}`, lang)}><strong>{secLabel(section, lang)}</strong></a>
+              {sep}{secBlurb(section, lang)}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <aside class="about-aside" aria-hidden="true">
+      <div class="about-visual"><span>{t('about.portrait')}</span></div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .about { padding-block: 64px; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .lead { font-size: 1.2rem; color: var(--c-text); }
+  .about-list { padding-left: 0; list-style: none; }
+  .about-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-muted);
+  }
+  .about-list strong { color: var(--c-ink); }
+
+  .about-visual {
+    aspect-ratio: 3 / 4;
+    border-radius: 18px;
+    background: var(--c-hero);
+    border: 1px solid var(--c-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-aside { order: -1; max-width: 280px; }
+  }
+</style>

@@ -200,6 +200,8 @@ img { max-width: 100%; display: block; }
   line-height: 1.85;
 }
 .prose > :first-child { margin-top: 0; }
+/* 文章页已自动渲染大标题，忽略正文开头多余的一级标题（目录本就从 H2 开始） */
+.prose > h1:first-child { display: none; }
 .prose h2 { font-size: 1.5rem; margin: 2em 0 0.6em; }
 .prose h3 { font-size: 1.2rem; margin: 1.6em 0 0.5em; }
 .prose p { margin: 0 0 1.15em; }
