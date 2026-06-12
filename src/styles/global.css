@@ -192,3 +192,47 @@ img { max-width: 100%; display: block; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* —— 文章正文排版（Markdown 渲染内容统一样式） —— */
+.prose {
+  color: var(--c-text);
+  font-size: 1.05rem;
+  line-height: 1.85;
+}
+.prose > :first-child { margin-top: 0; }
+.prose h2 { font-size: 1.5rem; margin: 2em 0 0.6em; }
+.prose h3 { font-size: 1.2rem; margin: 1.6em 0 0.5em; }
+.prose p { margin: 0 0 1.15em; }
+.prose a { color: var(--c-purple); text-decoration: underline; text-underline-offset: 2px; }
+.prose a:hover { color: var(--c-pink); }
+.prose strong { color: var(--c-ink); }
+.prose em { color: var(--c-muted); font-style: italic; }
+.prose ul, .prose ol { margin: 0 0 1.15em; padding-left: 1.4em; }
+.prose li { margin: 0.35em 0; }
+.prose blockquote {
+  margin: 1.4em 0;
+  padding: 10px 18px;
+  border-left: 3px solid var(--c-purple);
+  background: var(--c-bg-alt);
+  border-radius: 0 8px 8px 0;
+  color: var(--c-muted);
+}
+.prose blockquote p { margin: 0.4em 0; }
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--c-bg-alt);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+.prose pre {
+  background: var(--c-ink);
+  color: #f5f0fb;
+  padding: 16px 18px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 1.4em 0;
+}
+.prose pre code { background: transparent; padding: 0; }
+.prose img { border-radius: 12px; margin: 1.4em 0; }
+.prose hr { border: none; border-top: 1px solid var(--c-border); margin: 2em 0; }

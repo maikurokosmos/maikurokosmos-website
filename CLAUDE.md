@@ -163,7 +163,54 @@ package.json
 
 ---
 
-## 5. 品牌与设计资源
+## 5. 内容维护与数据来源（内容架构）
+
+> 核心区分：内容按**类型**维护，而不是按板块。九个子板块只有两种内容类型。
+> ⚠️ 本节是**已确定的决策**，但**尚未实施**——按路线图到对应阶段再接线。
+
+### 两种内容类型
+
+| 类型 | 形态 | 涉及子板块 | 存储方式 | 加一条新内容 = |
+|---|---|---|---|---|
+| **长文** | 有标题/正文/排版/目录的文章 | tech/writings、linguistics/analysis、（可能 music/critique） | **Content Collection + `.mdx`** | 新增一个 `.mdx` 文件并 push |
+| **目录/清单** | 一行行条目：标题 + 链接/视频 + 日期 + 短说明 | music/solo、choir、casual-cover、linguistics/readings、tech/datasets | **数据源**：YAML 文件 *或* Google Sheet | 加一行数据（YAML 块 / 表格一行） |
+
+### 解耦原则：页面渲染 ≠ 数据来源
+
+清单类内容的**渲染模板**（卡片/列表样式）与**数据来源**（YAML / Google Sheet）是两层，可独立替换。先写一次模板，数据源随时可换、互不影响（与「Astro/Vercel 解耦」同理）。
+
+### Google Sheet 方案的两条硬约束
+
+1. **只能「构建时」读取，禁止浏览器实时 fetch。**
+   - ❌ 浏览器实时读 Google：国内被墙 → 白屏；且违背全站"零额外 JS、飞快"的理念。
+   - ✅ 构建时读：Vercel（国外）build 时读 Sheet，结果**烤进静态 HTML**；国内读者只拿静态页，根本不碰 Google。
+2. **改完表格需触发一次重新构建**（`git push` 会自动触发部署，但编辑 Sheet 不会）。三种触发方式，由懒到勤：
+   - 手动：Vercel **Deploy Hook**（一个 URL），改完点书签 → ~1 分钟更新。
+   - 定时：Vercel Cron 每日自动 build。
+   - 最丝滑：Sheet 内 **Apps Script** 监听编辑 → 自动 ping Deploy Hook → 改完约 1 分钟自动更新。
+
+### YAML vs Google Sheet 取舍
+
+| | **YAML**（仓库内） | **Google Sheet**（构建时读） |
+|---|---|---|
+| 加条目 | 复制 4 行块、改字、push | 表格加一行（手机可操作） |
+| 设置成本 | 几乎为零 | 发布表格 + 配 Deploy Hook |
+| 版本可追溯 | ✅ git 历史 | ❌ 无 |
+| 更新延迟 | push 即触发 | 改完需触发 + build（~1 分钟） |
+| 依赖 | 无 | 依赖 Google（仅构建时，国内读者无感） |
+
+### 各板块采用方案（决定）
+
+- **音乐 solo / choir / casual-cover** → **Google Sheet**（构建时读 + Apps Script 自动触发）。约定字段：`title / link / date / note`。
+- **tech/writings、linguistics/analysis** → **MDX 长文**（需侧边目录、阅读进度条、自定义排版）。
+- **tech/datasets、linguistics/readings** → 先用 **YAML** 起步（结构简单、零设置），将来嫌烦再无痛切到 Sheet（模板不变）。
+- **music/critique** → 视长度定：短则归清单，长则用 MDX。
+
+> 实施顺序：先放一篇**样板 MDX 长文**跑通长文流程（站主进行中）；Google Sheet 字段由站主先建好，待到对应阶段再接线渲染 + 触发器。
+
+---
+
+## 6. 品牌与设计资源
 
 ### 品牌色（来自 logo）
 
@@ -211,7 +258,7 @@ package.json
 
 ---
 
-## 6. 开发路线图（循序渐进）
+## 7. 开发路线图（循序渐进）
 
 站主零基础，按阶段推进，每阶段都有可见成果：
 
@@ -222,7 +269,7 @@ package.json
 
 ---
 
-## 7. 常用命令
+## 8. 常用命令
 
 > ⚠️ Astro 尚未初始化，以下命令在阶段 0 完成后补全。
 
@@ -242,7 +289,7 @@ package.json
 
 ---
 
-## 8. 待决 / 备忘
+## 9. 待决 / 备忘
 
 - **域名**：www.maikurokosmos.com
 - **Vercel 国内访问**：可用性不稳定，可能被墙或变慢。若目标读者主要在国内，未来考虑同时部署 Cloudflare Pages 或迁移国内云。
