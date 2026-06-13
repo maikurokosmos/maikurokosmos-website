@@ -54,6 +54,18 @@ export const ui: Record<Lang, Record<string, string>> = {
     'hp.books': 'books',
     'hp.intro': 'intro',
     'hp.onThisPage': 'on this page',
+
+    // —— music events ——
+    'music.eventsHeading': 'performances & events',
+    'music.upcoming': 'upcoming',
+    'music.past': 'past',
+    'music.loadMore': 'load more',
+    'music.noUpcoming': 'no upcoming events yet.',
+    'music.noPast': 'no past events yet.',
+    'music.info': 'details',
+    'music.video': 'watch',
+    'music.readMore': 'read more',
+    'music.explore': 'explore by type',
   },
   zh: {
     // —— chrome ——
@@ -100,5 +112,17 @@ export const ui: Record<Lang, Record<string, string>> = {
     'hp.books': '书目',
     'hp.intro': '导读',
     'hp.onThisPage': '本页目录',
+
+    // —— music events ——
+    'music.eventsHeading': '演出与活动',
+    'music.upcoming': '即将',
+    'music.past': '往期',
+    'music.loadMore': '加载更多',
+    'music.noUpcoming': '暂无即将到来的活动。',
+    'music.noPast': '暂无往期活动。',
+    'music.info': '查看详情',
+    'music.video': '观看视频',
+    'music.readMore': '查看详情',
+    'music.explore': '按类型浏览',
   },
 };
