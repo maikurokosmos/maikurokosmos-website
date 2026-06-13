@@ -1,6 +1,9 @@
 ---
 import '@fontsource-variable/unbounded';
 import '@fontsource-variable/noto-sans';
+import '@fontsource/noto-sans-sc'; // 简体中文（400，备用）
+import '@fontsource/noto-sans-sc/500.css'; // 中文正文主用（Medium，400 偏细）
+import '@fontsource/noto-sans-sc/700.css'; // 中文加粗
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -13,8 +16,9 @@ interface Props {
 }
 
 const { title, description = SITE.description } = Astro.props;
-const fullTitle = title ? `${title} · ${SITE.title}` : SITE.title;
 const lang = getLangFromUrl(Astro.url);
+const siteTitle = lang === 'zh' ? '开启微观宇宙' : SITE.title;
+const fullTitle = title ? `${title} · ${siteTitle}` : siteTitle;
 ---
 
 <!doctype html>
@@ -34,6 +38,9 @@ const lang = getLangFromUrl(Astro.url);
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#210a35" />
+
+    <!-- 得意黑 Smiley Sans（中文标题）— cn-font-split 分块子集，按需加载 -->
+    <link rel="stylesheet" href="/fonts/smiley-sans/result.css" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />

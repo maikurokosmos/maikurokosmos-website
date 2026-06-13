@@ -18,7 +18,7 @@ export const ui: Record<Lang, Record<string, string>> = {
     // —— home ——
     'home.heroTitle': 'from sounds,\nfrom text,\nfor human',
     'home.heroIntro':
-      'Hi, and welcome to Kaiyu’s personal hub, <strong>“maikurokosmos”</strong>. I’m sharing a few things here: my independent research on <strong>AI safety and control</strong> (especially the bias embedded in AI), my learning in <strong>(socio-)linguistics</strong>, and my own work in <strong>music</strong>, including the events I take part in, the songs I cover, and the occasional music critique. Feel free to reach out, or follow me on my other social media!',
+      'Hi, and welcome to Kaiyu’s personal hub, “maikurokosmos”. I’m sharing a few things here: my independent research on AI safety and control (especially the bias embedded in AI), my learning in (socio-)linguistics, and my own work in music, including the events I take part in, the songs I cover, and the occasional music critique. Feel free to reach out, or follow me on my other social media!',
     'home.ctaAbout': 'about me',
     'home.ctaExplore': 'explore',
     'home.sectionsEyebrow': 'Sections',
@@ -66,7 +66,7 @@ export const ui: Record<Lang, Record<string, string>> = {
     // —— home ——
     'home.heroTitle': '从声音，\n从文字，\n为人而作',
     'home.heroIntro':
-      '你好，欢迎来到 Kaiyu 的个人主页 <strong>“maikurokosmos”</strong>。我在这里分享几件事：关于 <strong>AI 安全与控制</strong>的独立研究（尤其是 AI 中潜藏的偏见）、我在<strong>（社会）语言学</strong>方面的学习，以及我自己的<strong>音乐</strong>作品——包括我参与的演出、翻唱的歌曲，还有偶尔的乐评。欢迎联系我，或者在我的其他社交平台上关注我！',
+      '你好，欢迎来到 Kaiyu 的个人主页“开启微观宇宙”。我在这里分享几件事：关于 AI 安全与控制的独立研究（尤其是 AI 中潜藏的偏见）、我在（社会）语言学方面的学习，以及我自己的音乐作品——包括我参与的演出、翻唱的歌曲，还有偶尔的乐评。欢迎联系我，或者在我的其他社交平台上关注我！',
     'home.ctaAbout': '关于我',
     'home.ctaExplore': '逛逛',
     'home.sectionsEyebrow': '板块',

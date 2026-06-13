@@ -1,13 +1,14 @@
 ---
 import { Icon } from 'astro-icon/components';
 import {
-  SECTIONS, getSection, SOCIALS, formatDate,
+  SECTIONS, getSection, getSocials, formatDate,
   secLabel, secName, secBlurb, subLabel,
 } from '../config/site';
 import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const socials = getSocials(lang);
 
 // —— Latest updates (placeholder data; per-language sample titles) ——
 const latestByLang = {
@@ -38,7 +39,7 @@ const slogan = t('home.slogan');
         <a class="btn btn--ghost" href="#sections">{t('home.ctaExplore')}</a>
       </div>
       <div class="hero-socials">
-        {SOCIALS.map((s) => (
+        {socials.map((s) => (
           <a class="social-link" href={s.href} aria-label={s.label}>
             <Icon name={s.icon} />
           </a>

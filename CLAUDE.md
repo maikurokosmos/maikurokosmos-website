@@ -246,7 +246,10 @@ package.json
 
 - **整体基调**：浅色。Hero 区用淡紫背景（`--c-hero: #f1e9fb`）。
 - **纯色，无渐变** ⚠️：全站**不使用任何渐变填充**，所有颜色为纯色（站主明确要求）。按钮、标签、语言键等均为品牌纯色。
-- **字体策略**：**Unbounded**（`--font-display`，自托管）用于"显示/标签"类元素——标题、导航、卡片标签、按钮、页脚板块名、大字 slogan；**Noto Sans**（`--font-sans`，自托管）用于"阅读"类文本——正文、描述、子菜单、列表等。
+- **字体策略（双语，均自托管、不走 Google CDN）**：
+  - **显示/标签类**（`--font-display`，标题、导航、卡片标签、按钮、页脚板块名、大字 slogan）：拉丁用 **Unbounded**；中文用 **得意黑 Smiley Sans**（SIL OFL 1.1）。得意黑用 `cn-font-split` 分块子集，输出在 `public/fonts/smiley-sans/`（59 个 woff2 + `result.css`，按 unicode-range 仅加载页面用到的块），在 `BaseLayout` 的 `<head>` 里 `<link>` 引入。
+  - **阅读/正文类**（`--font-sans`，正文、描述、子菜单、列表）：拉丁用 **Noto Sans**；中文用 **Noto Sans SC**（`@fontsource/noto-sans-sc`，400/700，按 unicode-range 分块）。
+  - ⚠️ Hero 简介与板块卡片描述当前用的是 `--font-display`（站主早期要求），故中文版里这些**整段**会以得意黑（斜体 display）呈现，并会拉取较多字体块——若想更易读/更轻量，可把这两处改回 `--font-sans`。
 - **大小写约定**：标题与多数文字**全小写**（呼应 logo）；仅 eyebrow 小标签（`SECTIONS`、`LATEST`）和大字 slogan 用大写。
 - **板块命名玩法**：板块标题用 c→k 风格化（**te(k)h / linguisti(k)s / musi(k)**），介绍里用正确拼写加粗消歧（**tech** / **linguistics** / **music**）；URL slug 保持正确（`/tech` 等）。`site.ts` 里 `label`=风格化、`name`=正确拼写。
 - **日期格式**：`YYYY Mon DD`，月份缩写，但 May/June/July 写全、9 月用 `Sept`（见 `site.ts` 的 `formatDate`）。

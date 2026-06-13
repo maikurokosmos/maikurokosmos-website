@@ -49,6 +49,16 @@ export const SOCIALS = [
   { label: 'youtube', href: '#', icon: 'simple-icons:youtube' },
 ];
 
+// Chinese pages keep github + linkedin, swap the rest for Weibo + bilibili.
+export const SOCIALS_ZH = [
+  { label: 'github', href: '#', icon: 'simple-icons:github' },
+  { label: 'linkedin', href: '#', icon: 'simple-icons:linkedin' },
+  { label: 'weibo', href: '#', icon: 'simple-icons:sinaweibo' },
+  { label: 'bilibili', href: '#', icon: 'simple-icons:bilibili' },
+];
+
+export const getSocials = (lang: Lang) => (lang === 'zh' ? SOCIALS_ZH : SOCIALS);
+
 export const SECTIONS: Section[] = [
   {
     label: 'te(k)h',
@@ -64,9 +74,9 @@ export const SECTIONS: Section[] = [
     image: '/images/tekh.png',
     imagePos: 'left',
     children: [
-      { label: 'writings', labelZh: '写作', slug: 'writings', blurb: 'long-form research and technical writing', blurbZh: '长篇研究与技术写作' },
+      { label: 'writings', labelZh: '研究报告', slug: 'writings', blurb: 'long-form research and technical writing', blurbZh: '长篇研究与技术写作' },
       { label: 'datasets', labelZh: '数据集', slug: 'datasets', blurb: 'datasets i compile and release', blurbZh: '我整理并发布的数据集' },
-      { label: 'tools & demos', labelZh: '工具与 demo', slug: 'tools-and-demos', blurb: 'interactive demos you can run in the browser', blurbZh: '可在浏览器中运行的交互式 demo' },
+      { label: 'tools & demos', labelZh: '工具与代码示例', slug: 'tools-and-demos', blurb: 'interactive demos you can run in the browser', blurbZh: '可在浏览器中运行的交互式 demo' },
     ],
   },
   {
@@ -83,8 +93,8 @@ export const SECTIONS: Section[] = [
     image: '/images/linguistiks.png',
     imagePos: 'right',
     children: [
-      { label: 'readings', labelZh: '研读', slug: 'readings', blurb: 'reading notes and literature reviews', blurbZh: '阅读笔记与文献综述' },
-      { label: 'analysis', labelZh: '分析', slug: 'analysis', blurb: 'close analysis of language and translation', blurbZh: '语言与翻译的细读分析' },
+      { label: 'readings', labelZh: '文本阅读', slug: 'readings', blurb: 'reading notes and literature reviews', blurbZh: '阅读笔记与文献综述' },
+      { label: 'analysis', labelZh: '语言学分析', slug: 'analysis', blurb: 'academic analysis of language and translation', blurbZh: '语言与翻译的学术分析' },
     ],
   },
   {

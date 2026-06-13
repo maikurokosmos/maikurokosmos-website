@@ -26,10 +26,11 @@
 
   /* —— 字体 —— */
   /* 暂用系统字体栈（零外部依赖、国内访问也快）；含中文回退。日后如需自定义字体，改这里即可。 */
-  --font-sans: 'Noto Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto,
+  /* 正文：拉丁走 Noto Sans，中文走 Noto Sans SC（两侧同为 Noto Sans 家族） */
+  --font-sans: 'Noto Sans Variable', 'Noto Sans SC', system-ui, -apple-system, 'Segoe UI', Roboto,
     'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  /* 显示字体：Unbounded（开源、几何 quirky、自托管），用于标题与大字 */
-  --font-display: 'Unbounded Variable', var(--font-sans);
+  /* 显示/标题：拉丁走 Unbounded，中文走得意黑 Smiley Sans（几何 quirky） */
+  --font-display: 'Unbounded Variable', 'Smiley Sans Oblique', var(--font-sans);
 
   /* —— 尺寸 —— */
   --container: 1180px;
@@ -37,6 +38,16 @@
   --radius-sm: 10px;
   --header-h: 80px;
 }
+
+/* —— 中文页面：标题/显示类全用得意黑（含英文），不混 Unbounded —— */
+html[lang="zh-CN"] {
+  --font-display: 'Smiley Sans Oblique', var(--font-sans);
+}
+/* 得意黑标点偏紧，中文大标题行距稍微拉大 */
+html[lang="zh-CN"] .hero-title { line-height: 1.3; }
+/* Noto Sans SC 400 在屏幕上偏细发虚，中文正文统一用 500（Medium）更耐看 */
+html[lang="zh-CN"] body { font-weight: 500; }
+html[lang="zh-CN"] .footer-col ul a { font-weight: 500; }
 
 /* —— reset —— */
 *,

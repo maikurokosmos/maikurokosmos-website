@@ -83,6 +83,12 @@ const booksView = HP_BOOKS.map((book) => {
                   {book.items.map((it) => (
                     <li>
                       <a class="hp-chapter" href={localizedHref(`/linguistics/readings/${HP_SERIES.slug}/${book.slug}/${it.key}`, lang)}>
+                        <svg class="hp-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                          <path d="M14 3v5h5" />
+                          <line x1="9" y1="13" x2="15" y2="13" />
+                          <line x1="9" y1="17" x2="13" y2="17" />
+                        </svg>
                         <span class="hp-chapter-title">
                           {it.kind === 'book-intro'
                             ? t('hp.intro')
@@ -90,7 +96,6 @@ const booksView = HP_BOOKS.map((book) => {
                               ? `第${it.order}章：${it.title}`
                               : `chapter ${it.order}: ${it.title}`}
                         </span>
-                        <span class="hp-arrow" aria-hidden="true">→</span>
                       </a>
                     </li>
                   ))}
@@ -154,7 +159,6 @@ const booksView = HP_BOOKS.map((book) => {
     color: var(--c-text);
   }
   .hp-chapter:hover { background: var(--c-bg-alt); }
+  .hp-doc { flex: 0 0 auto; width: 16px; height: 16px; color: var(--c-purple); }
   .hp-chapter-title { flex: 1 1 auto; }
-  .hp-arrow { color: var(--c-muted); }
-  .hp-chapter:hover .hp-arrow { color: var(--c-purple); }
 </style>

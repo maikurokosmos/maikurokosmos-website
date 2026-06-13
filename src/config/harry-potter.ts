@@ -20,13 +20,13 @@ export interface HPBook {
 }
 
 export const HP_BOOKS: HPBook[] = [
-  { slug: '01-philosophers-stone', order: 1, titleEn: "philosopher's stone", titleZh: '魔法石' },
-  { slug: '02-chamber-of-secrets', order: 2, titleEn: 'chamber of secrets', titleZh: '密室' },
-  { slug: '03-prisoner-of-azkaban', order: 3, titleEn: 'prisoner of azkaban', titleZh: '阿兹卡班的囚徒' },
-  { slug: '04-goblet-of-fire', order: 4, titleEn: 'goblet of fire', titleZh: '火焰杯' },
-  { slug: '05-order-of-the-phoenix', order: 5, titleEn: 'order of the phoenix', titleZh: '凤凰社' },
-  { slug: '06-half-blood-prince', order: 6, titleEn: 'half-blood prince', titleZh: '混血王子' },
-  { slug: '07-deathly-hallows', order: 7, titleEn: 'deathly hallows', titleZh: '死亡圣器' },
+  { slug: '01-philosophers-stone', order: 1, titleEn: "philosopher's stone", titleZh: '哈利·波特与魔法石' },
+  { slug: '02-chamber-of-secrets', order: 2, titleEn: 'chamber of secrets', titleZh: '哈利·波特与密室' },
+  { slug: '03-prisoner-of-azkaban', order: 3, titleEn: 'prisoner of azkaban', titleZh: '哈利·波特与阿兹卡班的囚徒' },
+  { slug: '04-goblet-of-fire', order: 4, titleEn: 'goblet of fire', titleZh: '哈利·波特与火焰杯' },
+  { slug: '05-order-of-the-phoenix', order: 5, titleEn: 'order of the phoenix', titleZh: '哈利·波特与凤凰社' },
+  { slug: '06-half-blood-prince', order: 6, titleEn: 'half-blood prince', titleZh: '哈利·波特与混血王子' },
+  { slug: '07-deathly-hallows', order: 7, titleEn: 'deathly hallows', titleZh: '哈利·波特与死亡圣器' },
 ];
 
 export function getHPBook(slug: string): HPBook | undefined {
