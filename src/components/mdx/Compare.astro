@@ -1,0 +1,39 @@
+---
+// 双栏对译容器。可选 labelLeft / labelRight 作为两栏表头。
+// 配色：左栏淡紫 / 右栏淡灰 / 高亮黄 / 批注琥珀（由 Row、Hl 控制）。
+// 里面放若干 <Row>，每个 Row 里放两个 <Cell>（左、右）。
+interface Props {
+  labelLeft?: string;
+  labelRight?: string;
+}
+const { labelLeft, labelRight } = Astro.props;
+---
+
+<div class="cmp">
+  {(labelLeft || labelRight) && (
+    <div class="cmp-head">
+      <span>{labelLeft}</span>
+      <span>{labelRight}</span>
+    </div>
+  )}
+  <slot />
+</div>
+
+<style>
+  .cmp { border: 1px solid var(--c-border); border-radius: 14px; overflow: hidden; margin: 1.8em 0; }
+
+  /* 列名：中西文都用得意黑，加大、加粗；左右背景区分 */
+  .cmp-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-family: 'Smiley Sans Oblique', var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--c-ink);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .cmp-head span { padding: 10px 16px; }
+  .cmp-head span:first-child { background: #f1e9fb; border-right: 1px solid var(--c-border); }
+  .cmp-head span:last-child { background: #f2f2f4; }
+  @media (max-width: 640px) { .cmp-head { display: none; } }
+</style>

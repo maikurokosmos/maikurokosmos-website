@@ -1,0 +1,25 @@
+---
+// 高亮。默认黄色。可选 c（1-4）给不同颜色，让左右两栏"对应的部分"用同色高亮连起来。
+interface Props {
+  c?: 1 | 2 | 3 | 4 | string;
+}
+const { c } = Astro.props;
+---
+
+<mark class:list={['hl', c ? `hl--${c}` : null]}><slot /></mark>
+
+<style>
+  .hl {
+    background: #fbef9d;
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 2px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  /* 可选：给对应的左右部分配同色高亮 */
+  .hl--1 { background: #fcdcef; }
+  .hl--2 { background: #d9ecfd; }
+  .hl--3 { background: #ddf6d4; }
+  .hl--4 { background: #e7d6fb; }
+</style>

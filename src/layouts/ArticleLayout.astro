@@ -1,0 +1,82 @@
+---
+// 给 .md / .mdx 文章页用的布局：标题 + 侧边目录 + 正文（.prose）。
+// 目录是客户端扫描正文里的 h2/h3 生成的 —— 普通 `##` 和自定义 <Heading> 组件都能进目录。
+import BaseLayout from './BaseLayout.astro';
+
+const { frontmatter = {} } = Astro.props as {
+  frontmatter?: { title?: string; description?: string; eyebrow?: string; date?: string };
+};
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+  <section class="section">
+    <div class="container art-wrap" data-art-wrap>
+      <aside class="toc" data-toc hidden>
+        <p class="toc-head">on this page</p>
+        <ul></ul>
+      </aside>
+      <article class="art-body">
+        <header class="art-head">
+          {frontmatter.eyebrow && <span class="eyebrow">{frontmatter.eyebrow}</span>}
+          <h1>{frontmatter.title}</h1>
+          {frontmatter.date && <p class="art-date">{frontmatter.date}</p>}
+        </header>
+        <div class="prose"><slot /></div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const slugify = (s: string) =>
+    s.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w一-鿿-]/g, '').replace(/-+/g, '-') || 'section';
+
+  const wrap = document.querySelector('[data-art-wrap]');
+  const toc = document.querySelector('[data-toc]');
+  const prose = document.querySelector('.art-body .prose');
+  if (wrap && toc && prose) {
+    const ul = toc.querySelector('ul')!;
+    const heads = prose.querySelectorAll('h2, h3');
+    const seen: Record<string, number> = {};
+    heads.forEach((h) => {
+      let id = h.id;
+      if (!id) {
+        id = slugify(h.textContent || '');
+        if (seen[id]) id = `${id}-${++seen[id]}`;
+        else seen[id] = 1;
+        h.id = id;
+      }
+      const li = document.createElement('li');
+      li.className = h.tagName === 'H3' ? 'toc-l3' : 'toc-l2';
+      const a = document.createElement('a');
+      a.href = `#${id}`;
+      a.textContent = (h.textContent || '').trim();
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    if (heads.length) {
+      (toc as HTMLElement).hidden = false;
+      wrap.classList.add('has-toc');
+    }
+  }
+</script>
+
+<style>
+  .art-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; align-items: start; }
+  .art-wrap.has-toc { grid-template-columns: 220px minmax(0, 1fr); }
+  .art-body { max-width: 72ch; }
+  .art-head { margin-bottom: 28px; }
+  .art-date { color: var(--c-muted); font-size: 0.9rem; margin: 6px 0 0; }
+
+  .toc { position: sticky; top: calc(var(--header-h) + 20px); font-size: 0.9rem; }
+  .toc-head { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-muted); margin: 0 0 10px; }
+  .toc ul { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--c-border); }
+  .toc :global(a) { display: block; padding: 5px 0 5px 14px; margin-left: -2px; color: var(--c-muted); border-left: 2px solid transparent; }
+  .toc :global(a:hover) { color: var(--c-purple); border-left-color: var(--c-purple); }
+  .toc :global(.toc-l3 a) { padding-left: 26px; font-size: 0.85rem; }
+
+  @media (max-width: 860px) {
+    .art-wrap.has-toc { grid-template-columns: 1fr; gap: 0; }
+    .toc { display: none; }
+  }
+</style>

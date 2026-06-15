@@ -1,0 +1,38 @@
+---
+// 对译的一行：里面放两个 <Cell>（左、右）。可选 note 作为批注（占整行，显示在下方）。
+// 左栏淡紫底、右栏淡灰底；批注琥珀色。
+interface Props {
+  note?: string;
+}
+const { note } = Astro.props;
+---
+
+<div class="cmp-row">
+  <div class="cmp-cols"><slot /></div>
+  {note && <p class="cmp-note">{note}</p>}
+</div>
+
+<style>
+  .cmp-row { border-top: 1px solid var(--c-border); }
+  .cmp-row:first-child { border-top: none; }
+  .cmp-cols { display: grid; grid-template-columns: 1fr 1fr; }
+  /* cells are slotted from the .mdx (different scope) → :global */
+  .cmp-cols :global(.cmp-cell) { padding: 12px 16px; line-height: 1.75; }
+  .cmp-cols :global(.cmp-cell:nth-child(1)) { background: #f6f0fc; }
+  .cmp-cols :global(.cmp-cell:nth-child(2)) { background: #f5f5f7; border-left: 1px solid var(--c-border); }
+
+  .cmp-note {
+    margin: 0;
+    padding: 8px 16px 14px;
+    background: #fdf6e3;
+    color: var(--c-muted);
+    font-size: 0.85rem;
+    border-top: 1px dashed var(--c-border);
+  }
+  .cmp-note::before { content: '※ '; color: #c79114; }
+
+  @media (max-width: 640px) {
+    .cmp-cols { grid-template-columns: 1fr; }
+    .cmp-cols :global(.cmp-cell:nth-child(2)) { border-left: none; border-top: 1px solid var(--c-border); }
+  }
+</style>

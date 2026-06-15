@@ -1,0 +1,56 @@
+---
+layout: ../layouts/ArticleLayout.astro
+title: 一篇示例 MDX 文章
+eyebrow: mdx demo
+date: 2026 June 13
+description: 演示 MDX 怎么写——Markdown + 自定义组件。
+---
+
+import Callout from '../components/mdx/Callout.astro';
+import Figure from '../components/mdx/Figure.astro';
+import Heading from '../components/mdx/Heading.astro';
+import Compare from '../components/mdx/Compare.astro';
+import Row from '../components/mdx/Row.astro';
+import Cell from '../components/mdx/Cell.astro';
+import Hl from '../components/mdx/Hl.astro';
+
+这是正文第一段。**普通 Markdown 全部都能用**：粗体、*斜体*、`行内代码`、[链接](https://maikurokosmos.com)，列表、引用、代码块……都和 `.md` 一模一样。
+
+## 普通二级标题（## 写法）
+
+普通 `##` / `###` 标题照常工作，并自动进右侧目录。
+
+<Heading level={2}>带四角星 + 手绘曲线的标题</Heading>
+
+这是用 `<Heading>` 组件做的标题：开头一个手绘四角星，下面紧贴一条手绘曲线。默认图标是四角星，也能用 `icon="/icons/你的图标.svg"` 换成自己的；曲线同理用 `curve="..."`。目录里也照样能找到它。
+
+<Heading level={3}>三级也行（曲线更短更细）</Heading>
+
+正文继续……
+
+## 双栏对译 + 高亮 + 批注
+
+`<Compare>` 给"多语言对译比较"用：左栏淡紫、右栏淡灰，高亮黄色，批注占整行琥珀色。
+
+<Compare labelLeft="中文（人文版）" labelRight="English（原文）">
+  <Row note="unDursleyish 是 Rowling 生造的词，用德思礼一家当「标准」来反衬，中文很难直译。">
+    <Cell>因为她妹妹和她那 <Hl>一无是处</Hl> 的妹夫，与德思礼一家的为人处事 <Hl>完全不一样</Hl>。</Cell>
+    <Cell>because her sister and her <Hl>good-for-nothing</Hl> husband were as <Hl>unDursleyish</Hl> as it was possible to be.</Cell>
+  </Row>
+  <Row>
+    <Cell>它 <Hl>目不转睛</Hl> 地盯着女贞路远处的转角。</Cell>
+    <Cell>Its eyes fixed <Hl>unblinkingly</Hl> on the far corner of Privet Drive.</Cell>
+  </Row>
+</Compare>
+
+> 可选：`<Hl c="1">` 到 `c="4"` 能给高亮换不同颜色——左右用同一个 `c` 值就同色，把"对应的部分"连起来。
+
+## 结论卡片 & 图
+
+<Callout type="conclusion" title="核心结论">
+  这些都是组件，纯 Markdown 做不到；MDX 里 import 一下就能用，**组件内部也能写 Markdown**。
+</Callout>
+
+<Figure src="/images/hero.svg" alt="示例插图" caption="图 1 · 这是图注，居中显示。" />
+
+复制 `src/pages/sandbox.mdx` 改成你自己的内容即可。等想让它进某个板块（出现在列表、带日期标签、双语），告诉我接进内容集合。

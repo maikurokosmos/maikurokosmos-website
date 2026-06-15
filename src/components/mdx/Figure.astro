@@ -1,0 +1,20 @@
+---
+// 图 + 图注组件。
+interface Props {
+  src: string;
+  alt?: string;
+  caption?: string;
+}
+const { src, alt = '', caption } = Astro.props;
+---
+
+<figure class="figure">
+  <img src={src} alt={alt} />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .figure { margin: 1.8em 0; }
+  .figure img { width: 100%; border-radius: 12px; border: 1px solid var(--c-border); }
+  .figure figcaption { margin-top: 8px; font-size: 0.85rem; color: var(--c-muted); text-align: center; }
+</style>
