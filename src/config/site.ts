@@ -95,6 +95,7 @@ export const SECTIONS: Section[] = [
     children: [
       { label: 'readings', labelZh: '文本阅读', slug: 'readings', blurb: 'reading notes and literature reviews', blurbZh: '阅读笔记与文献综述' },
       { label: 'analysis', labelZh: '语言学分析', slug: 'analysis', blurb: 'academic analysis of language and translation', blurbZh: '语言与翻译的学术分析' },
+      { label: 'learnings', labelZh: '语言学习', slug: 'learnings', blurb: 'notes from learning languages, and writings to help foreigners learn chinese', blurbZh: '我学习各种语言的笔记，以及帮助外国人更好学习中文的文章' },
     ],
   },
   {

@@ -5,7 +5,7 @@ kind: book-intro
 book: "01-philosophers-stone"
 key: intro
 order: 0
-draft: false
+draft: true
 ---
 
 _(English notes about book one — coming soon.)_

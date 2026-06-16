@@ -1,9 +1,8 @@
 ---
 import '@fontsource-variable/unbounded';
 import '@fontsource-variable/noto-sans';
-import '@fontsource/noto-sans-sc'; // 简体中文（400，备用）
-import '@fontsource/noto-sans-sc/500.css'; // 中文正文主用（Medium，400 偏细）
-import '@fontsource/noto-sans-sc/700.css'; // 中文加粗
+// MiSans VF（中文版正文主用，覆盖中文与拉丁；cn-font-split 分块按 unicode-range 按需加载）
+import 'misans-vf-4web/dist/result.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';

@@ -206,6 +206,11 @@ const t = useTranslations(lang);
   @media (max-width: 900px) {
     .nav-toggle { display: flex; }
 
+    /* backdrop-filter on .site-header would create a new containing block for
+       descendants (including position:fixed), trapping the mobile menu inside
+       the header's box. Disable it on mobile so .nav can cover the full viewport. */
+    .site-header { backdrop-filter: none; -webkit-backdrop-filter: none; background: #fff; }
+
     .nav {
       position: fixed;
       inset: var(--header-h) 0 0 0;

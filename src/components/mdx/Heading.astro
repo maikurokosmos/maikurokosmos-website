@@ -12,19 +12,34 @@ const Tag = `h${level}` as 'h2' | 'h3';
 ---
 
 <Tag class:list={['deco-h', `deco-h--${level}`]}>
-  {icon && <img class="deco-h-icon" src={icon} alt="" />}<span class="deco-h-text"><slot /></span>
-  {curve ? (
-    <img class="deco-h-curve" src={curve} alt="" />
-  ) : (
-    <svg class="deco-h-curve" viewBox="0 0 300 6" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M2,3 C22,1 42,5 70,3 C98,1 124,5 154,3 C184,1 210,5 242,3 C266,1.5 286,4.5 298,3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-    </svg>
-  )}
+  {icon && <span class="deco-h-icon" style={`-webkit-mask-image: url(${icon}); mask-image: url(${icon});`} aria-hidden="true" />}
+  <span class="deco-h-body">
+    <span class="deco-h-text"><slot /></span>
+    {curve ? (
+      <img class="deco-h-curve" src={curve} alt="" />
+    ) : (
+      <svg class="deco-h-curve" viewBox="0 0 300 6" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2,3 C22,1 42,5 70,3 C98,1 124,5 154,3 C184,1 210,5 242,3 C266,1.5 286,4.5 298,3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+      </svg>
+    )}
+  </span>
 </Tag>
 
 <style>
-  .deco-h { line-height: 1.12; }
-  .deco-h-icon { width: 0.92em; height: 0.92em; object-fit: contain; vertical-align: -0.05em; margin-right: 9px; }
-  .deco-h-curve { display: block; width: clamp(120px, 62%, 280px); height: 7px; color: var(--c-pink); margin-top: 1px; }
-  .deco-h--3 .deco-h-curve { color: var(--c-purple); width: clamp(90px, 48%, 200px); height: 6px; }
+  .deco-h { display: flex; align-items: flex-start; gap: 10px; line-height: 1.12; color: var(--c-pink); }
+  .deco-h--3 { color: var(--c-purple); }
+  .deco-h-icon {
+    flex: 0 0 auto;
+    display: inline-block;
+    width: 0.92em; height: 0.92em;
+    margin-top: 0.1em;
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-position: center; mask-position: center;
+    -webkit-mask-size: contain; mask-size: contain;
+  }
+  .deco-h-body { flex: 1 1 auto; min-width: 0; }
+  .deco-h-text { color: var(--c-ink); }
+  .deco-h-curve { display: block; width: clamp(120px, 62%, 280px); height: 7px; margin: 1px 0 0; }
+  .deco-h--3 .deco-h-curve { width: clamp(90px, 48%, 200px); height: 6px; }
 </style>

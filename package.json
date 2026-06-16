@@ -19,6 +19,7 @@
     "@iconify-json/simple-icons": "^1.2.86",
     "astro": "^6.4.4",
     "astro-icon": "^1.1.5",
+    "misans-vf-4web": "^1.1.1",
     "papaparse": "^5.5.3"
   },
   "devDependencies": {

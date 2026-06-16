@@ -9,6 +9,7 @@ export async function getStaticPaths() {
   type Entry = CollectionEntry<'harryPotter'>;
   const groups = new Map<string, Entry[]>();
   for (const e of all) {
+    if (e.data.draft) continue;
     if (e.data.kind !== 'chapter' && e.data.kind !== 'book-intro') continue;
     if (!e.data.book) continue;
     const id = `${e.data.book}//${e.data.key}`;
