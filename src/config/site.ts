@@ -43,18 +43,18 @@ export const SITE = {
 // Social links shown in the hero, below the buttons.
 // ⚠️ Replace the placeholder hrefs ('#') with your real URLs.
 export const SOCIALS = [
-  { label: 'github', href: '#', icon: 'simple-icons:github' },
-  { label: 'linkedin', href: '#', icon: 'simple-icons:linkedin' },
-  { label: 'x', href: '#', icon: 'simple-icons:x' },
-  { label: 'youtube', href: '#', icon: 'simple-icons:youtube' },
+  { label: 'github', href: 'https://github.com/maikurokosmos', icon: 'simple-icons:github' },
+  { label: 'linkedin', href: 'https://www.linkedin.com/in/lucasm1997/', icon: 'simple-icons:linkedin' },
+  { label: 'x', href: 'https://x.com/maikurokosmos', icon: 'simple-icons:x' },
+  { label: 'youtube', href: 'https://www.youtube.com/@maikurokosmos', icon: 'simple-icons:youtube' },
 ];
 
 // Chinese pages keep github + linkedin, swap the rest for Weibo + bilibili.
 export const SOCIALS_ZH = [
-  { label: 'github', href: '#', icon: 'simple-icons:github' },
-  { label: 'linkedin', href: '#', icon: 'simple-icons:linkedin' },
-  { label: 'weibo', href: '#', icon: 'simple-icons:sinaweibo' },
-  { label: 'bilibili', href: '#', icon: 'simple-icons:bilibili' },
+  { label: 'github', href: 'https://github.com/maikurokosmos', icon: 'simple-icons:github' },
+  { label: 'linkedin', href: 'https://www.linkedin.com/in/lucasm1997/', icon: 'simple-icons:linkedin' },
+  { label: 'weibo', href: 'https://weibo.com/maikurokosmos', icon: 'simple-icons:sinaweibo' },
+  { label: 'bilibili', href: 'https://space.bilibili.com/68570340', icon: 'simple-icons:bilibili' },
 ];
 
 export const getSocials = (lang: Lang) => (lang === 'zh' ? SOCIALS_ZH : SOCIALS);
@@ -67,9 +67,9 @@ export const SECTIONS: Section[] = [
     nameZh: '技术',
     slug: 'tech',
     blurb:
-      'independent research on AI safety and control, dataset releases, and interactive demos you can run right in the browser.',
+      'i\'ll post some of my independent research about AI control and safety, some datasets about AI and linguistics, and some of the demos you can run on my website',
     blurbZh:
-      '关于 AI 安全与控制的独立研究、数据集发布，以及可以直接在浏览器里运行的交互式 demo。',
+      '我会在这里发布一些独立的、但是小打小闹的关于AI控制和安全的研究，整理一些和AI+语言学相关的数据集，以及展示一些突发奇想的demo。',
     accent: '#881ed3',
     image: '/images/tekh.png',
     imagePos: 'left',
@@ -86,9 +86,9 @@ export const SECTIONS: Section[] = [
     nameZh: '语言学',
     slug: 'linguistics',
     blurb:
-      'reading notes and close analysis, from sociolinguistics to the translation of books, journals, and more.',
+      'i\'ll share some readings of literary works and academic papers, and some of my own language learning insights.',
     blurbZh:
-      '阅读笔记与文本细读，从社会语言学到书籍、期刊等的翻译分析。',
+      '我会在这里创建一些文学作品阅读和学术作品阅读的分享专栏，以及分享一些我自己的语言学习心得。',
     accent: '#e736d3',
     image: '/images/linguistiks.png',
     imagePos: 'right',
@@ -105,9 +105,9 @@ export const SECTIONS: Section[] = [
     nameZh: '音乐',
     slug: 'music',
     blurb:
-      'the performances I take part in, choir and casual covers, the occasional critique, and future original work.',
+      'i\'ll share some of my solo, duet, and choir performances, some casual covers, and occasional music critiques (which is not professional).',
     blurbZh:
-      '我参与的演出、合唱与随性翻唱、偶尔的乐评，以及未来的原创作品。',
+      '我会在这里分享一些我参与的独唱、重唱、合唱，以及以其他形式参与的音乐演出，以及发布一些并不专业的音乐翻唱，也许也会撰写一些半吊子的乐评。',
     accent: '#b42ed0',
     image: '/images/musik.png',
     imagePos: 'center',

@@ -25,7 +25,7 @@ export const READING_SERIES: ReadingSeries[] = [
     titleZh: HP_SERIES.titleZh,
     href: `/linguistics/readings/${HP_SERIES.slug}`,
     tags: ['translation', 'close reading', 'chinese'],
-    tagsZh: ['翻译', '细读', '中文'],
+    tagsZh: ['比较翻译', '社会语言学','小说阅读'],
     books: HP_BOOKS.length,
   },
 ];
