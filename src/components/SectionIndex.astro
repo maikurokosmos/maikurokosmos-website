@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getSection, secLabel, secName, secBlurb, subLabel, subBlurb } from '../config/site';
-import { getLangFromUrl, localizedHref } from '../i18n/utils';
+import { getSection, secLabel, secName, secBlurb, subLabel, subBlurb, formatDate } from '../config/site';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+import { getTechEntries } from '../lib/tech-content';
 
 interface Props {
   slug: string;
@@ -12,7 +13,17 @@ const section = getSection(slug);
 if (!section) throw new Error(`未知板块：${slug}`);
 
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const sep = lang === 'zh' ? '：' : ': ';
+
+// Latest content feed (tech only for now; other sections have no source yet).
+const entries = slug === 'tech' ? getTechEntries(10) : [];
+// Distinct brand color per subsection for the feed chip.
+const SUB_COLORS: Record<string, string> = {
+  writings: '#e736d3',
+  datasets: '#881ed3',
+  'tools-and-demos': '#b42ed0',
+};
 ---
 
 <BaseLayout title={secName(section, lang)} description={secBlurb(section, lang)}>
@@ -40,6 +51,37 @@ const sep = lang === 'zh' ? '：' : ': ';
           ))
         }
       </div>
+
+      {entries.length > 0 && (
+        <div class="latest-block">
+          <span class="eyebrow">{t('section.latestEyebrow')}</span>
+          <h2>{t('section.latestHeading')}</h2>
+          <ul class="feed">
+            {entries.map((e) => {
+              const sub = section.children.find((c) => c.slug === e.sub)!;
+              const title = lang === 'zh' ? e.titleZh : e.titleEn;
+              const blurb = lang === 'zh' ? e.blurbZh : e.blurbEn;
+              const tags = lang === 'zh' ? e.tagsZh : e.tags;
+              const color = SUB_COLORS[e.sub] ?? section.accent;
+              return (
+                <li class="feed-item">
+                  <a class="feed-row" href={localizedHref(e.href, lang)}>
+                    <div class="feed-top">
+                      <span class="feed-chip" style={`background:${color}`}>{subLabel(sub, lang)}</span>
+                      <time class="feed-date">{formatDate(e.date, lang)}</time>
+                    </div>
+                    <h3 class="feed-title">{title}</h3>
+                    <p class="feed-blurb">{blurb}</p>
+                    {tags.length > 0 && (
+                      <div class="feed-tags">{tags.map((tg) => <span class="feed-tag">{tg}</span>)}</div>
+                    )}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>
@@ -73,4 +115,38 @@ const sep = lang === 'zh' ? '：' : ': ';
   .sub-card { display: flex; flex-direction: column; padding: 26px; color: var(--c-text); }
   .sub-card h3 { margin-bottom: 8px; }
   .sub-card p { color: var(--c-muted); font-size: 0.95rem; margin: 0; }
+
+  /* —— latest content feed —— */
+  .latest-block { margin-top: 60px; }
+  .latest-block h2 { font-size: 1.6rem; margin-bottom: 4px; }
+  .feed { list-style: none; margin: 20px 0 0; padding: 0; border-top: 1px solid var(--c-border); }
+  .feed-item { border-bottom: 1px solid var(--c-border); }
+  .feed-row { display: block; padding: 20px 6px; color: var(--c-text); transition: background 0.15s ease; }
+  .feed-row:hover { background: var(--c-bg-alt); }
+  .feed-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .feed-chip {
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .feed-date { font-size: 0.85rem; color: var(--c-muted); font-variant-numeric: tabular-nums; }
+  .feed-title { font-size: 1.15rem; margin: 0 0 6px; color: var(--c-ink); }
+  .feed-row:hover .feed-title { color: var(--c-purple); }
+  .feed-blurb { color: var(--c-muted); font-size: 0.95rem; margin: 0 0 12px; max-width: 60em; }
+  .feed-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .feed-tag {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: var(--c-purple);
+    background: #fff;
+    border: 1px solid var(--c-border);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
 </style>

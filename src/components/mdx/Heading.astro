@@ -6,12 +6,14 @@ interface Props {
   level?: 2 | 3;
   icon?: string;
   curve?: string;
+  /** Optional stable anchor id (else the article TOC auto-slugs from the text). */
+  id?: string;
 }
-const { level = 2, icon = '/icons/star-4.svg', curve } = Astro.props;
+const { level = 2, icon = '/icons/star-4.svg', curve, id } = Astro.props;
 const Tag = `h${level}` as 'h2' | 'h3';
 ---
 
-<Tag class:list={['deco-h', `deco-h--${level}`]}>
+<Tag id={id} class:list={['deco-h', `deco-h--${level}`]}>
   {icon && <span class="deco-h-icon" style={`-webkit-mask-image: url(${icon}); mask-image: url(${icon});`} aria-hidden="true" />}
   <span class="deco-h-body">
     <span class="deco-h-text"><slot /></span>
@@ -38,8 +40,12 @@ const Tag = `h${level}` as 'h2' | 'h3';
     -webkit-mask-position: center; mask-position: center;
     -webkit-mask-size: contain; mask-size: contain;
   }
-  .deco-h-body { flex: 1 1 auto; min-width: 0; }
-  .deco-h-text { color: var(--c-ink); }
-  .deco-h-curve { display: block; width: clamp(120px, 62%, 280px); height: 7px; margin: 1px 0 0; }
-  .deco-h--3 .deco-h-curve { width: clamp(90px, 48%, 200px); height: 6px; }
+  /* body shrink-wraps to the text; padding-bottom reserves room for the curve.
+     the curve is absolutely positioned so its own intrinsic (viewBox) width
+     can't inflate the box — the box stays exactly as wide as the title text. */
+  .deco-h-body { flex: 0 1 auto; min-width: 0; width: fit-content; max-width: 100%; position: relative; padding-bottom: 8px; }
+  .deco-h-text { display: block; color: var(--c-ink); }
+  /* curve = 100% of the (text-width) body, so it grows/shrinks with the title */
+  .deco-h-curve { position: absolute; left: 0; bottom: 0; width: 100%; height: 7px; }
+  .deco-h--3 .deco-h-curve { height: 6px; }
 </style>

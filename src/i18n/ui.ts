@@ -14,6 +14,7 @@ export const ui: Record<Lang, Record<string, string>> = {
     'footer.about': 'about',
     'crumb.home': 'home',
     'common.comingSoon': 'coming soon',
+    'common.onThisPage': 'on this page',
 
     // —— home ——
     'home.heroTitle': 'from sounds,\nfrom text,\nfor human',
@@ -49,6 +50,17 @@ export const ui: Record<Lang, Record<string, string>> = {
     'readings.casual': 'casual notes',
     'readings.openSeries': 'open series →',
 
+    // —— datasets ——
+    'datasets.title': 'datasets',
+    'datasets.lead': 'datasets i compile and release, each with full documentation of how it is collected, built, and labeled.',
+    'datasets.open': 'open dataset →',
+    'datasets.viewHf': 'view on hugging face ↗',
+    'datasets.growing': 'growing daily',
+
+    // —— section index ——
+    'section.latestEyebrow': 'latest',
+    'section.latestHeading': 'latest content',
+
     // —— harry potter series / chapter ——
     'hp.readingSeries': 'reading series',
     'hp.books': 'books',
@@ -74,6 +86,7 @@ export const ui: Record<Lang, Record<string, string>> = {
     'footer.about': '关于',
     'crumb.home': '首页',
     'common.comingSoon': '即将上线',
+    'common.onThisPage': '本页目录',
 
     // —— home ——
     'home.heroTitle': '从声音，\n从文字，\n为人而作',
@@ -106,6 +119,17 @@ export const ui: Record<Lang, Record<string, string>> = {
     'readings.series': '系列',
     'readings.casual': '随手笔记',
     'readings.openSeries': '进入系列 →',
+
+    // —— datasets ——
+    'datasets.title': '数据集',
+    'datasets.lead': '我整理并发布的数据集，每一个都附带完整的采集、构建与标注说明。',
+    'datasets.open': '查看数据集 →',
+    'datasets.viewHf': '在 Hugging Face 查看 ↗',
+    'datasets.growing': '每日增长',
+
+    // —— section index ——
+    'section.latestEyebrow': '最新',
+    'section.latestHeading': '最新内容',
 
     // —— harry potter series / chapter ——
     'hp.readingSeries': '阅读系列',
