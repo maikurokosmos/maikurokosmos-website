@@ -5,25 +5,14 @@ import {
   secLabel, secName, secBlurb, subLabel,
 } from '../config/site';
 import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+import { getLatestEntries, feedTitle } from '../lib/feed';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const socials = getSocials(lang);
 
-// —— Latest updates (placeholder data; per-language sample titles) ——
-const latestByLang = {
-  en: [
-    { title: 'sample: the title of a long-form tech research post', section: 'tech', date: '2026-06-01', href: '/tech/writings' },
-    { title: 'sample: translation analysis of a spell in harry potter', section: 'linguistics', date: '2026-05-20', href: '/linguistics/analysis' },
-    { title: 'sample: live video from a choir performance', section: 'music', date: '2026-05-08', href: '/music/choir' },
-  ],
-  zh: [
-    { title: '示例：一篇技术长文研究的标题', section: 'tech', date: '2026-06-01', href: '/tech/writings' },
-    { title: '示例：哈利波特里一个咒语的翻译分析', section: 'linguistics', date: '2026-05-20', href: '/linguistics/analysis' },
-    { title: '示例：一场合唱演出的现场视频', section: 'music', date: '2026-05-08', href: '/music/choir' },
-  ],
-};
-const latest = latestByLang[lang];
+// —— Latest updates: the 5 newest items across all three sections ——
+const latest = await getLatestEntries(5);
 
 const slogan = t('home.slogan');
 ---
@@ -102,7 +91,7 @@ const slogan = t('home.slogan');
             <li>
               <a class="update-row" href={localizedHref(item.href, lang)}>
                 <span class="update-tag" style={`background:${sec.accent}`}>{secName(sec, lang)}</span>
-                <span class="update-title">{item.title}</span>
+                <span class="update-title">{feedTitle(item, lang)}</span>
                 <time class="update-date">{formatDate(item.date, lang)}</time>
               </a>
             </li>
@@ -110,7 +99,7 @@ const slogan = t('home.slogan');
         })
       }
     </ul>
-    <p class="latest-note">{t('home.latestNote')}</p>
+    {latest.length === 0 && <p class="latest-note">{t('home.latestEmpty')}</p>}
   </div>
 </section>
 

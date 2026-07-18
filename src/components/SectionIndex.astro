@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getSection, secLabel, secName, secBlurb, subLabel, subBlurb, formatDate } from '../config/site';
 import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
-import { getTechEntries } from '../lib/tech-content';
+import { getSectionEntries, feedTitle, feedBlurb, feedTags } from '../lib/feed';
 
 interface Props {
   slug: string;
@@ -16,14 +16,8 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const sep = lang === 'zh' ? '：' : ': ';
 
-// Latest content feed (tech only for now; other sections have no source yet).
-const entries = slug === 'tech' ? getTechEntries(10) : [];
-// Distinct brand color per subsection for the feed chip.
-const SUB_COLORS: Record<string, string> = {
-  writings: '#e736d3',
-  datasets: '#881ed3',
-  'tools-and-demos': '#b42ed0',
-};
+// Latest content feed — the 10 newest items across this section's subsections.
+const entries = await getSectionEntries(slug, 10);
 ---
 
 <BaseLayout title={secName(section, lang)} description={secBlurb(section, lang)}>
@@ -59,10 +53,10 @@ const SUB_COLORS: Record<string, string> = {
           <ul class="feed">
             {entries.map((e) => {
               const sub = section.children.find((c) => c.slug === e.sub)!;
-              const title = lang === 'zh' ? e.titleZh : e.titleEn;
-              const blurb = lang === 'zh' ? e.blurbZh : e.blurbEn;
-              const tags = lang === 'zh' ? e.tagsZh : e.tags;
-              const color = SUB_COLORS[e.sub] ?? section.accent;
+              const title = feedTitle(e, lang);
+              const blurb = feedBlurb(e, lang);
+              const tags = feedTags(e, lang);
+              const color = sub?.color ?? section.accent;
               return (
                 <li class="feed-item">
                   <a class="feed-row" href={localizedHref(e.href, lang)}>

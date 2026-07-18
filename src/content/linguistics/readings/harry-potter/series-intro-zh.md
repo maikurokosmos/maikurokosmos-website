@@ -4,6 +4,9 @@ lang: zh
 kind: series-intro
 key: intro
 order: 0
+date: "2026-06-16"
+blurb: "时隔二十多年重读《哈利·波特》，把中文译本和英文原著放在一起看：那些变了味的词，究竟是我变了，还是翻译早就埋下了伏笔。"
+tags: ["哈利·波特", "翻译", "专栏导言"]
 draft: false
 ---
 

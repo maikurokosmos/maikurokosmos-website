@@ -4,6 +4,9 @@ lang: en
 kind: series-intro
 key: intro
 order: 0
+date: "2026-06-16"
+blurb: "why i'm rereading harry potter twenty-some years on, and what holding the chinese translation up against the english original can tell us about where a word's meaning really shifted."
+tags: ["harry potter", "translation", "series intro"]
 draft: false
 ---
 

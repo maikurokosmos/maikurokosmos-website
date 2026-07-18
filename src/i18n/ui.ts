@@ -26,7 +26,7 @@ export const ui: Record<Lang, Record<string, string>> = {
     'home.sectionsHeading': "what's here",
     'home.latestEyebrow': 'Latest',
     'home.latestHeading': 'recent updates',
-    'home.latestNote': '(Placeholder examples for now; real posts will appear here once published.)',
+    'home.latestEmpty': 'nothing published yet — check back soon.',
     'home.slogan': 'AI CONTROL RESEARCH ✦ LINGUISTIC LEARNING & SHARING ✦ MUSIC PORTFOLIO ✦ ',
 
     // —— about ——
@@ -98,7 +98,7 @@ export const ui: Record<Lang, Record<string, string>> = {
     'home.sectionsHeading': '这里有什么',
     'home.latestEyebrow': '最新',
     'home.latestHeading': '近期更新',
-    'home.latestNote': '（暂为示例；正式发布后这里会显示真实内容。）',
+    'home.latestEmpty': '还没有发布内容，敬请期待。',
     'home.slogan': 'AI 控制研究 ✦ 语言学习与分享 ✦ 音乐作品集 ✦ ',
 
     // —— about ——

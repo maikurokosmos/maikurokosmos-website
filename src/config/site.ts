@@ -10,6 +10,8 @@ export interface SubSection {
   slug: string;
   blurb: string;
   blurbZh: string;
+  /** Chip color in the "latest content" feed on the section index. */
+  color: string;
 }
 
 export interface Section {
@@ -74,9 +76,9 @@ export const SECTIONS: Section[] = [
     image: '/images/tekh.png',
     imagePos: 'left',
     children: [
-      { label: 'writings', labelZh: '研究报告', slug: 'writings', blurb: 'long-form research and technical writing', blurbZh: '长篇研究与技术写作' },
-      { label: 'datasets', labelZh: '数据集', slug: 'datasets', blurb: 'datasets i compile and release', blurbZh: '我整理并发布的数据集' },
-      { label: 'tools & demos', labelZh: '工具与代码示例', slug: 'tools-and-demos', blurb: 'interactive demos you can run in the browser', blurbZh: '可在浏览器中运行的交互式 demo' },
+      { label: 'writings', labelZh: '研究报告', slug: 'writings', blurb: 'long-form research and technical writing', blurbZh: '长篇研究与技术写作', color: '#e736d3' },
+      { label: 'datasets', labelZh: '数据集', slug: 'datasets', blurb: 'datasets i compile and release', blurbZh: '我整理并发布的数据集', color: '#881ed3' },
+      { label: 'tools & demos', labelZh: '工具与代码示例', slug: 'tools-and-demos', blurb: 'interactive demos you can run in the browser', blurbZh: '可在浏览器中运行的交互式 demo', color: '#b42ed0' },
     ],
   },
   {
@@ -93,9 +95,9 @@ export const SECTIONS: Section[] = [
     image: '/images/linguistiks.png',
     imagePos: 'right',
     children: [
-      { label: 'readings', labelZh: '文本阅读', slug: 'readings', blurb: 'reading notes and literature reviews', blurbZh: '阅读笔记与文献综述' },
-      { label: 'analysis', labelZh: '语言学分析', slug: 'analysis', blurb: 'academic analysis of language and translation', blurbZh: '语言与翻译的学术分析' },
-      { label: 'learnings', labelZh: '语言学习', slug: 'learnings', blurb: 'notes from learning languages, and writings to help foreigners learn chinese', blurbZh: '我学习各种语言的笔记，以及帮助外国人更好学习中文的文章' },
+      { label: 'readings', labelZh: '文本阅读', slug: 'readings', blurb: 'reading notes and literature reviews', blurbZh: '阅读笔记与文献综述', color: '#e736d3' },
+      { label: 'analysis', labelZh: '语言学分析', slug: 'analysis', blurb: 'academic analysis of language and translation', blurbZh: '语言与翻译的学术分析', color: '#881ed3' },
+      { label: 'learnings', labelZh: '语言学习', slug: 'learnings', blurb: 'notes from learning languages, and writings to help foreigners learn chinese', blurbZh: '我学习各种语言的笔记，以及帮助外国人更好学习中文的文章', color: '#b42ed0' },
     ],
   },
   {
@@ -112,10 +114,10 @@ export const SECTIONS: Section[] = [
     image: '/images/musik.png',
     imagePos: 'center',
     children: [
-      { label: 'solo', labelZh: '独唱独奏', slug: 'solo', blurb: 'solo singing and playing', blurbZh: '独唱与独奏' },
-      { label: 'choir', labelZh: '合唱', slug: 'choir', blurb: 'choir works and performances', blurbZh: '合唱作品与演出' },
-      { label: 'casual cover', labelZh: '随性翻唱', slug: 'casual-cover', blurb: 'casual covers', blurbZh: '随性翻唱' },
-      { label: 'critique', labelZh: '乐评', slug: 'critique', blurb: 'music critique and appreciation', blurbZh: '音乐评论与赏析' },
+      { label: 'solo', labelZh: '独唱独奏', slug: 'solo', blurb: 'solo singing and playing', blurbZh: '独唱与独奏', color: '#e736d3' },
+      { label: 'choir', labelZh: '合唱', slug: 'choir', blurb: 'choir works and performances', blurbZh: '合唱作品与演出', color: '#881ed3' },
+      { label: 'casual cover', labelZh: '随性翻唱', slug: 'casual-cover', blurb: 'casual covers', blurbZh: '随性翻唱', color: '#b42ed0' },
+      { label: 'critique', labelZh: '乐评', slug: 'critique', blurb: 'music critique and appreciation', blurbZh: '音乐评论与赏析', color: '#6f1fb8' },
     ],
   },
 ];

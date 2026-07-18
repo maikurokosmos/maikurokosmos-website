@@ -19,6 +19,12 @@ const harryPotter = defineCollection({
     key: z.string(),
     /** Sort order within a book (intro = 0, then chapters 1, 2, …) */
     order: z.number().default(0),
+    /** ISO publish date, e.g. "2026-07-18" — drives the "latest content" feeds. */
+    date: z.string(),
+    /** One-line summary shown in the feeds (in this file's own language). */
+    blurb: z.string().default(''),
+    /** Feed tags (in this file's own language). */
+    tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),
 });
