@@ -22,11 +22,11 @@ const { labelLeft, labelRight } = Astro.props;
 <style>
   .cmp { border: 1px solid var(--c-border); border-radius: 14px; overflow: hidden; margin: 1.8em 0; }
 
-  /* 列名：中西文都用得意黑，加大、加粗；左右背景区分 */
+  /* 列名：走 --font-display，随页面语言切换（英文页 Unbounded / 中文页得意黑）；左右背景区分 */
   .cmp-head {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    font-family: 'Smiley Sans Oblique', var(--font-sans);
+    font-family: var(--font-display);
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--c-ink);

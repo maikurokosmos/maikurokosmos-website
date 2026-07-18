@@ -8,14 +8,17 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../config/site';
 import { getLangFromUrl } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Override the URL-derived locale (e.g. for MDX drafts whose URL doesn't yet match their content language). */
+  lang?: Lang;
 }
 
-const { title, description = SITE.description } = Astro.props;
-const lang = getLangFromUrl(Astro.url);
+const { title, description = SITE.description, lang: langOverride } = Astro.props;
+const lang = langOverride ?? getLangFromUrl(Astro.url);
 const siteTitle = lang === 'zh' ? '开启微观宇宙' : SITE.title;
 const fullTitle = title ? `${title} · ${siteTitle}` : siteTitle;
 ---

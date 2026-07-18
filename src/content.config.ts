@@ -6,7 +6,7 @@ import { glob } from 'astro/loaders';
 // the pairing is captured here so a global EN/中 toggle can plug in later.
 const harryPotter = defineCollection({
   loader: glob({
-    pattern: '**/*.md',
+    pattern: '**/*.{md,mdx}',
     base: './src/content/linguistics/readings/harry-potter',
   }),
   schema: z.object({

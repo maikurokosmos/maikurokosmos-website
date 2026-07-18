@@ -1,6 +1,9 @@
 ---
 // 装饰标题：开头一个小 icon + 标题文字 + 下面紧贴一条手绘曲线。
-// 默认 icon 是手绘四角星；icon / curve 都可传图片路径换成你自己的文件。
+// 曲线长度 = 标题文字的实际宽度（字数越多越长）；波长按字号缩放（mask-size 用 em）。
+// 实现要点：曲线用「空 span + 重复 mask」而不是内联 <svg>——<svg> 带 viewBox 会有固有宽高比，
+// 在 flex 里会把容器撑到 height×ratio，导致所有标题的线一样长。
+// 默认 icon 是手绘四角星；icon / curve 都可传图片路径换成自己的文件（curve 会作为 mask 使用，跟随文字颜色）。
 // 用法：<Heading level={2}>标题</Heading>  或  <Heading level={3} icon="/icons/x.svg">标题</Heading>
 interface Props {
   level?: 2 | 3;
@@ -9,19 +12,28 @@ interface Props {
 }
 const { level = 2, icon = '/icons/star-4.svg', curve } = Astro.props;
 const Tag = `h${level}` as 'h2' | 'h3';
+
+// 一个可无缝平铺的手绘波浪（首尾同高），viewBox 60x6
+const DEFAULT_CURVE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 6' preserveAspectRatio='none'%3E%3Cpath d='M0,3 C10,0.6 20,5.4 30,3 C40,0.6 50,5.4 60,3' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E";
+const curveUrl = curve ?? DEFAULT_CURVE;
 ---
 
 <Tag class:list={['deco-h', `deco-h--${level}`]}>
-  {icon && <span class="deco-h-icon" style={`-webkit-mask-image: url(${icon}); mask-image: url(${icon});`} aria-hidden="true" />}
+  {icon && (
+    <span
+      class="deco-h-icon"
+      style={`-webkit-mask-image: url("${icon}"); mask-image: url("${icon}");`}
+      aria-hidden="true"
+    />
+  )}
   <span class="deco-h-body">
     <span class="deco-h-text"><slot /></span>
-    {curve ? (
-      <img class="deco-h-curve" src={curve} alt="" />
-    ) : (
-      <svg class="deco-h-curve" viewBox="0 0 300 6" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M2,3 C22,1 42,5 70,3 C98,1 124,5 154,3 C184,1 210,5 242,3 C266,1.5 286,4.5 298,3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-      </svg>
-    )}
+    <span
+      class="deco-h-curve"
+      style={`-webkit-mask-image: url("${curveUrl}"); mask-image: url("${curveUrl}");`}
+      aria-hidden="true"
+    />
   </span>
 </Tag>
 
@@ -38,8 +50,19 @@ const Tag = `h${level}` as 'h2' | 'h3';
     -webkit-mask-position: center; mask-position: center;
     -webkit-mask-size: contain; mask-size: contain;
   }
-  .deco-h-body { flex: 1 1 auto; min-width: 0; }
+  /* 收缩到文字宽度（曲线是空 span，不贡献固有宽度）→ 曲线长度 = 标题长度 */
+  .deco-h-body { flex: 0 1 auto; min-width: 0; }
   .deco-h-text { color: var(--c-ink); }
-  .deco-h-curve { display: block; width: clamp(120px, 62%, 280px); height: 7px; margin: 1px 0 0; }
-  .deco-h--3 .deco-h-curve { width: clamp(90px, 48%, 200px); height: 6px; }
+  .deco-h-curve {
+    display: block;
+    width: 100%;
+    height: 7px;
+    margin-top: 2px;
+    background-color: currentColor;
+    -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+    -webkit-mask-position: left center; mask-position: left center;
+    /* 波长跟着字号走：字号越大，波越舒展 */
+    -webkit-mask-size: 2.6em 100%; mask-size: 2.6em 100%;
+  }
+  .deco-h--3 .deco-h-curve { height: 6px; -webkit-mask-size: 2.4em 100%; mask-size: 2.4em 100%; }
 </style>

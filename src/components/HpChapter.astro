@@ -13,7 +13,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const entry = (await getCollection('harryPotter')).find((e) => e.id === entryId)!;
-const { Content, headings } = await render(entry);
+const { Content } = await render(entry);
 
 const book = getHPBook(entry.data.book!);
 const bookTitle = book ? (lang === 'zh' ? book.titleZh : book.titleEn) : '';
@@ -23,7 +23,6 @@ const kicker = isChapter
     ? `${bookTitle} · 第${entry.data.order}章`
     : `${bookTitle} · chapter ${entry.data.order}`
   : bookTitle;
-const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
 <BaseLayout title={entry.data.title} description={`${lang === 'zh' ? HP_SERIES.titleZh : HP_SERIES.titleEn} · ${bookTitle}`}>
@@ -43,17 +42,11 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
   </section>
 
   <section class="section">
-    <div class:list={["container", "art-wrap", { "art-wrap--solo": toc.length === 0 }]}>
-      {toc.length > 0 && (
-        <aside class="toc" aria-label="On this page">
-          <p class="toc-head">{t('hp.onThisPage')}</p>
-          <ul>
-            {toc.map((h) => (
-              <li class={`toc-l${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>
-            ))}
-          </ul>
-        </aside>
-      )}
+    <div class="container art-wrap" data-art-wrap>
+      <aside class="toc" data-toc aria-label="On this page" hidden>
+        <p class="toc-head">{t('hp.onThisPage')}</p>
+        <ul></ul>
+      </aside>
       <article class="prose art-body">
         <Content />
       </article>
@@ -62,6 +55,39 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 </BaseLayout>
 
 <script>
+  // 目录：客户端扫描正文里的 h2/h3 —— 普通 `##` 和自定义 <Heading> 组件都能进目录。
+  const slugify = (s: string) =>
+    s.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w一-鿿-]/g, '').replace(/-+/g, '-') || 'section';
+
+  const wrap = document.querySelector('[data-art-wrap]');
+  const toc = document.querySelector('[data-toc]');
+  const prose = document.querySelector('.art-body');
+  if (wrap && toc && prose) {
+    const ul = toc.querySelector('ul')!;
+    const heads = prose.querySelectorAll('h2, h3');
+    const seen: Record<string, number> = {};
+    heads.forEach((h) => {
+      let id = h.id;
+      if (!id) {
+        id = slugify(h.textContent || '');
+        if (seen[id]) id = `${id}-${++seen[id]}`;
+        else seen[id] = 1;
+        h.id = id;
+      }
+      const li = document.createElement('li');
+      li.className = h.tagName === 'H3' ? 'toc-l3' : 'toc-l2';
+      const a = document.createElement('a');
+      a.href = `#${id}`;
+      a.textContent = (h.textContent || '').trim();
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    if (heads.length) {
+      (toc as HTMLElement).hidden = false;
+      wrap.classList.add('has-toc');
+    }
+  }
+
   const bar = document.getElementById('rp-bar');
   if (bar) {
     const update = () => {
@@ -86,20 +112,21 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
   .art-kicker { font-family: var(--font-display); font-size: 0.8rem; color: var(--c-purple); margin: 0 0 8px; }
   .art-title { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.1; margin: 0; }
 
-  .art-wrap { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; align-items: start; }
-  .art-wrap--solo { grid-template-columns: minmax(0, 1fr); }
+  .art-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; align-items: start; }
+  .art-wrap.has-toc { grid-template-columns: 220px minmax(0, 1fr); }
   .art-body { max-width: 70ch; }
 
   .toc { position: sticky; top: calc(var(--header-h) + 20px); font-size: 0.9rem; }
   .toc-head { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-muted); margin: 0 0 10px; }
+  /* li / a 由客户端脚本生成，拿不到 Astro 的作用域属性 → 用 :global() */
   .toc ul { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--c-border); }
-  .toc li { margin: 0; }
-  .toc a { display: block; padding: 5px 0 5px 14px; margin-left: -2px; color: var(--c-muted); border-left: 2px solid transparent; }
-  .toc a:hover { color: var(--c-purple); border-left-color: var(--c-purple); }
-  .toc-l3 a { padding-left: 26px; font-size: 0.85rem; }
+  .toc :global(li) { margin: 0; }
+  .toc :global(a) { display: block; padding: 5px 0 5px 14px; margin-left: -2px; color: var(--c-muted); border-left: 2px solid transparent; }
+  .toc :global(a:hover) { color: var(--c-purple); border-left-color: var(--c-purple); }
+  .toc :global(.toc-l3 a) { padding-left: 26px; font-size: 0.85rem; }
 
   @media (max-width: 860px) {
-    .art-wrap { grid-template-columns: 1fr; gap: 0; }
+    .art-wrap.has-toc { grid-template-columns: 1fr; gap: 0; }
     .toc { display: none; }
   }
 </style>

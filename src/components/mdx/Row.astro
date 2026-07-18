@@ -1,15 +1,28 @@
 ---
-// 对译的一行：里面放两个 <Cell>（左、右）。可选 note 作为批注（占整行，显示在下方）。
+// 对译的一行：里面放两个 <Cell>（左、右）。
+// 批注（占整行，显示在下方）有两种写法：
+//   1) 短批注用 note 属性：<Row note="……">
+//   2) 长批注 / 富文本用具名插槽：
+//      <Row>
+//        <Cell>…</Cell>
+//        <Cell>…</Cell>
+//        <Fragment slot="note">……（可写成整段）……</Fragment>
+//      </Row>
 // 左栏淡紫底、右栏淡灰底；批注琥珀色。
 interface Props {
   note?: string;
 }
 const { note } = Astro.props;
+const hasNoteSlot = Astro.slots.has('note');
 ---
 
 <div class="cmp-row">
   <div class="cmp-cols"><slot /></div>
-  {note && <p class="cmp-note">{note}</p>}
+  {hasNoteSlot ? (
+    <div class="cmp-note"><slot name="note" /></div>
+  ) : note ? (
+    <p class="cmp-note">{note}</p>
+  ) : null}
 </div>
 
 <style>
@@ -23,13 +36,16 @@ const { note } = Astro.props;
 
   .cmp-note {
     margin: 0;
-    padding: 8px 16px 14px;
+    padding: 10px 16px 14px;
     background: #fdf6e3;
     color: var(--c-muted);
     font-size: 0.85rem;
+    line-height: 1.75;
     border-top: 1px dashed var(--c-border);
   }
   .cmp-note::before { content: '※ '; color: #c79114; }
+  /* 具名插槽批注若被 MDX 包成 <p>，压平边距并内联，让 ※ 与文字同排 */
+  .cmp-note :global(p) { margin: 0; display: inline; }
 
   @media (max-width: 640px) {
     .cmp-cols { grid-template-columns: 1fr; }

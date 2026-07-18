@@ -2,13 +2,14 @@
 // 给 .md / .mdx 文章页用的布局：标题 + 侧边目录 + 正文（.prose）。
 // 目录是客户端扫描正文里的 h2/h3 生成的 —— 普通 `##` 和自定义 <Heading> 组件都能进目录。
 import BaseLayout from './BaseLayout.astro';
+import type { Lang } from '../i18n/ui';
 
 const { frontmatter = {} } = Astro.props as {
-  frontmatter?: { title?: string; description?: string; eyebrow?: string; date?: string };
+  frontmatter?: { title?: string; description?: string; eyebrow?: string; date?: string; lang?: Lang };
 };
 ---
 
-<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+<BaseLayout title={frontmatter.title} description={frontmatter.description} lang={frontmatter.lang}>
   <section class="section">
     <div class="container art-wrap" data-art-wrap>
       <aside class="toc" data-toc hidden>
