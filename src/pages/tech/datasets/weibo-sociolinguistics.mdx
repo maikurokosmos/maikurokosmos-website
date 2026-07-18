@@ -1,0 +1,189 @@
+---
+layout: ../../../layouts/ArticleLayout.astro
+title: weibo sociolinguistics corpus
+eyebrow: dataset
+date: 2026 July 15
+description: A daily-growing, sociolinguistically annotated corpus of Chinese Weibo hot-search discourse, labeled for validity, target, stance, emotion, moral framing, and satire.
+---
+
+import Callout from '../../../components/mdx/Callout.astro';
+import Heading from '../../../components/mdx/Heading.astro';
+
+**maikurokosmos_socioling_weibo_dataset** is a Chinese-language corpus of real Weibo (微博) discourse, sampled from daily hot-search topics and annotated for sociolinguistic research. It is **built to grow**: most days a new hot-search topic is added, and topics are deliberately spread across **different domains**, so the corpus steadily accumulates posts across many subjects, registers, and communities, with a standing interest in **fandom (饭圈) language and online-community slang**.
+
+<p>
+  <a class="btn btn--primary" href="https://huggingface.co/datasets/maikurokosmos/maikurokosmos_socioling_weibo_dataset" target="_blank" rel="noopener">view the dataset on hugging face ↗</a>
+</p>
+
+<Heading level={2}>1. at a glance</Heading>
+
+- **Source**: public posts from Weibo, sampled per daily hot-search topic (话题/热搜).
+- **Cadence**: roughly one new topic per day, ~200 top posts collected each time. The corpus keeps growing.
+- **Size**: 1,000+ rows so far, and counting.
+- **Language**: Chinese (Mandarin; includes internet slang, fandom jargon, and code-mixing).
+- **Unit of analysis**: one row = one Weibo post.
+- **Model**: background extraction and labeling currently use **Qwen3.7-Max** (the latest at time of writing); model changes will be noted here.
+- **Annotations**: two layers, an AI-generated first pass plus a human-reviewed subset (see [the review layer](#review-layer)).
+- **Format**: CSV on Hugging Face (auto-converted to Parquet); single `train` split.
+- **License**: CC BY-NC 4.0, for **non-commercial academic research** (see [license](#license)).
+
+<Heading level={2}>2. how the corpus is built</Heading>
+
+Each day's batch goes through the same pipeline:
+
+1. **Pick a topic.** Select one Weibo hot-search topic that has meaningful volume / traction, aiming day to day for a topic from a *different* domain than recent ones.
+2. **Collect posts.** Gather roughly **200 popular posts** under that topic.
+3. **Ground the topic (AI, pass 1).** The model (currently **Qwen3.7-Max**) reads the topic and produces a **background brief**: what the event is, plus a list of the key entities and terms involved. This context matters, because much of Weibo discourse is unintelligible without knowing who and what is being referred to.
+4. **Label the posts (AI, pass 2).** A second pass by the same model, **conditioned on that background brief**, assigns the annotation labels to each post.
+5. **Human review.** Each day a sample of **up to 50 posts** is drawn (**partly at random, partly by rules that flag labels likely to be wrong**) and checked by hand. The reviewer confirms or corrects each label, and the result is stored separately in the `reviewed_*` fields. Comparing the initial labels against this reviewed subset is how **accuracy / F1** for the labeling is computed.
+6. **Publish.** The batch is appended to the dataset.
+
+<Callout type="conclusion" title="Why a two-pass, human-in-the-loop design">
+  Labeling social-media discourse without context produces noise: a joke reads as an insult, a nickname reads as gibberish. Grounding the model in a per-topic background brief first, then reviewing a daily sample by hand, keeps the labels interpretable while staying fast enough to run every day.
+</Callout>
+
+<Heading level={2}>3. what's in each row</Heading>
+
+Every post carries some metadata, the raw text, an **initial** (AI) label set, and a parallel **reviewed** (human) label set.
+
+<div class="table-wrap">
+
+| field | what it holds |
+|---|---|
+| `hf_public_record_key` | Stable per-row identifier. |
+| `date` | The date the topic/batch was collected. |
+| `keyword` | The hot-search keyword / topic this post was sampled under. |
+| `text` | The Weibo post text. |
+| `validity` | *(initial label)* whether the post is usable, and if not, why. |
+| `target_type` | *(initial label)* what the post is mainly about, or directed at. |
+| `stance` | *(initial label)* the post's stance toward that target. |
+| `emotion_category` | *(initial label)* the dominant emotion. |
+| `emotion_subtype` | *(initial label)* a finer-grained emotion within the category. |
+| `mf_main` | *(initial label)* the moral foundation invoked, if any. |
+| `mf_direction` | *(initial label)* which pole of that foundation. |
+| `satire` | *(initial label)* whether the post is satirical / ironic. |
+| `review_selected` | whether this row was drawn into the daily human-review sample. |
+| `reviewed_validity` … `reviewed_satire` | the human-checked version of each label above. |
+
+</div>
+
+<Heading level={2}>4. annotation scheme (the codebook)</Heading>
+
+The full label set is below. Every dimension also has a `reviewed_*` counterpart (see [the review layer](#review-layer)). A couple of values carry non-standard spellings, e.g. `outfit_or_appearence` and `idol_doration`; these are the literal field values, kept as-is.
+
+<Heading level={3}>validity</Heading>
+
+Whether the post is usable, and if not, why.
+
+| value | meaning |
+|---|---|
+| `general` | a normal, on-topic post that carries interpretable content. |
+| `noise` | off-topic or content-free noise (ads, spam, gibberish, unrelated chatter). |
+| `stanning_and_other_spamming` | stan-style bulk posting, i.e. fan control-comment / vote-farming (饭圈控评、打投) and similar spam. |
+
+<Heading level={3}>target_type</Heading>
+
+What the post is mainly about, or directed at.
+
+| value | meaning |
+|---|---|
+| `person` | a specific person. |
+| `outfit_or_appearence` | someone's outfit, looks, or appearance. |
+| `action` | an action, behavior, or event. |
+| `opinion` | a stated opinion or viewpoint. |
+| `group_or_organization` | a group or organization. |
+| `works_or_creations` | a work or creation (a song, show, artwork, product…). |
+| `scenery` | scenery or a scene. |
+| `others` | anything else. |
+
+<Heading level={3}>stance</Heading>
+
+The post's stance toward its target.
+
+| value | meaning |
+|---|---|
+| `support` | supportive / approving. |
+| `oppose` | opposed / critical. |
+| `neutral` | balanced or objective. |
+| `no_clear_stance` | no discernible stance. |
+| `irrelevant` | not actually about the target. |
+
+<Heading level={3}>emotion_category & emotion_subtype</Heading>
+
+The dominant emotion (`emotion_category`) and a finer emotion within it (`emotion_subtype`).
+
+| emotion_category | emotion_subtype |
+|---|---|
+| `anger` | personal_anger, moral_outrage, fury |
+| `disgust` | physical_disgust, moral_contemp, rejection |
+| `annoyance` | annoyance |
+| `like` | idol_doration, simple_liking, admiration, solidarity |
+| `sadness` | disappointed, empathy, grieve, hopeless |
+| `happiness` | simple_happy, pride, gloat, looking_forward_and_hope |
+| `fear` | anxious, fear, concerned |
+| `surprise` | astounded, happily_surprised, shock |
+| `none` | general |
+| `uncertain` | uncertain |
+
+<Heading level={3}>mf_main & mf_direction (moral framing)</Heading>
+
+`mf_main` is the moral foundation a post invokes (from **Moral Foundations Theory**); `mf_direction` is which pole of that foundation is expressed, so its allowed values depend on `mf_main`.
+
+| mf_main | mf_direction |
+|---|---|
+| `care_vs_harm` | care · harm |
+| `fairness_vs_cheating` | fairness · cheating |
+| `loyalty_vs_betrayal` | loyalty · betrayal |
+| `authority_vs_subversion` | authority · subversion |
+| `sanctity_vs_degradation` | sanctity · degradation |
+| `liberty_vs_oppression` | liberty · oppression |
+| `none` | none |
+
+`mf_direction` also allows `uncertain` as a standalone value.
+
+<Heading level={3}>satire</Heading>
+
+| value | meaning |
+|---|---|
+| `yes` | uses irony, sarcasm, or satire, so surface wording may invert the intended meaning. |
+| `no` | literal / sincere. |
+
+<Heading level={3} id="review-layer">the review layer</Heading>
+
+Every field above has a `reviewed_*` twin, plus a `review_selected` flag.
+
+- **`review_selected`**: whether the row was pulled for human review. Selection is **partly random, partly rule-based**, so rows whose labels look likely to be wrong are flagged for a closer look.
+- **`reviewed_*`**: the human verdict. If it **matches** the initial label, the original was judged correct; if it **differs**, it has been corrected.
+- Comparing the initial labels against `reviewed_*` over the reviewed subset is exactly how the labeling's **accuracy / F1** is measured.
+
+<Heading level={2}>5. what you can study with it</Heading>
+
+Because topics are deliberately spread across different domains, and because some labels specifically flag **fandom (饭圈) stanning and similar spam**, this corpus is aimed at:
+
+- **Community & subculture language**: how particular communities and subcultures actually talk; the `stanning_and_other_spamming` validity value and fandom-flavored emotions like `idol_doration` are built in on purpose.
+- **Comparing communities**: whether different communities show different linguistic habits, framing, and emotional registers around comparable events.
+- **Tracking internet slang**: following buzzwords and memes as they surface, spread, and fade across topics and days.
+- **Language change, sociolinguistically**: how usage shifts over time, tracked across a steadily growing, dated corpus.
+- **Stance, emotion & moral framing in the wild**: Chinese-language stance / emotion / moral-foundation classification on messy real text.
+- **AI-vs-human labeling**: the initial vs. `reviewed_*` split is a ready-made benchmark, and the basis for the reported accuracy / F1.
+
+<Heading level={2}>6. limitations & responsible use</Heading>
+
+<Callout type="conclusion" title="Read before using">
+  - **Most labels are AI-generated** (currently Qwen3.7-Max). Only a daily sample (up to 50 posts) is human-verified, so use the `review_selected` / `reviewed_*` fields when you need gold labels.
+  - **Selection bias.** Topics are chosen from hot searches, and posts are the *popular* ones, so this is not a random sample of Weibo.
+  - **Some categories involve judgment calls** (e.g. `emotion_subtype`, `stance`, `target_type`), so expect annotator subjectivity.
+  - **Privacy & copyright.** The corpus stores post text plus topic/date only, with no usernames or profile data. The underlying posts remain their authors' work and are subject to Weibo's terms; please don't use this to profile or target individuals.
+</Callout>
+
+<Heading level={2} id="license">7. license & attribution</Heading>
+
+<Callout type="conclusion" title="CC BY-NC 4.0 · non-commercial research only">
+  The **annotations and the compilation** are released under **CC BY-NC 4.0**: free to use for non-commercial academic research, with attribution to maikurokosmos. The **raw post text** remains the intellectual property of its original authors and subject to Weibo's terms of service, and is redistributed here for research only. Please don't use the dataset commercially or to identify / target individuals.
+</Callout>
+
+<Heading level={2}>8. help audit, or send feedback</Heading>
+
+<Callout type="conclusion" title="Contributors & auditors welcome">
+  This corpus is labeled largely by AI with a human check on a daily sample, so **independent auditing genuinely improves it**. If you'd like to help review labels, spot systematic errors, question a category in the codebook, or just have suggestions, please get in touch: **[maikurokosmos@gmail.com](mailto:maikurokosmos@gmail.com)**. Corrections and critiques are all welcome.
+</Callout>

@@ -3,17 +3,22 @@
 // 目录是客户端扫描正文里的 h2/h3 生成的 —— 普通 `##` 和自定义 <Heading> 组件都能进目录。
 import BaseLayout from './BaseLayout.astro';
 import type { Lang } from '../i18n/ui';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const { frontmatter = {} } = Astro.props as {
   frontmatter?: { title?: string; description?: string; eyebrow?: string; date?: string; lang?: Lang };
 };
+
+// frontmatter.lang 优先（给 URL 还没对上内容语言的 MDX 用，如 sandbox），否则按 URL 推导
+const lang = frontmatter.lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
-<BaseLayout title={frontmatter.title} description={frontmatter.description} lang={frontmatter.lang}>
+<BaseLayout title={frontmatter.title} description={frontmatter.description} lang={lang}>
   <section class="section">
     <div class="container art-wrap" data-art-wrap>
       <aside class="toc" data-toc hidden>
-        <p class="toc-head">on this page</p>
+        <p class="toc-head">{t('common.onThisPage')}</p>
         <ul></ul>
       </aside>
       <article class="art-body">

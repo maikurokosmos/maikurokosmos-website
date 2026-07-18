@@ -1,0 +1,191 @@
+---
+layout: ../../../../layouts/ArticleLayout.astro
+title: 微博社会语言学语料库
+eyebrow: 数据集
+date: 2026 July 15
+description: 一个每日增长、面向社会语言学研究的中文微博热搜话语语料库，标注了有效性、指向对象、立场、情绪、道德框架与反讽。
+---
+
+import Callout from '../../../../components/mdx/Callout.astro';
+import Heading from '../../../../components/mdx/Heading.astro';
+
+**maikurokosmos_socioling_weibo_dataset** 是一个中文微博(Weibo)话语语料库，从每日热搜话题中采样，并为社会语言学研究做了标注。它被设计成**持续增长**的：大多数日子会新增一个热搜话题，而且会刻意在**不同领域**之间轮换选题，因此语料库会不断累积覆盖不同主题、不同语域、不同社群的博文，并**特别关注饭圈语言与网络社群黑话**。
+
+<p>
+  <a class="btn btn--primary" href="https://huggingface.co/datasets/maikurokosmos/maikurokosmos_socioling_weibo_dataset" target="_blank" rel="noopener">在 Hugging Face 查看数据集 ↗</a>
+</p>
+
+<Heading level={2}>1. 数据集基本信息</Heading>
+
+- **来源**：微博公开博文，按每日热搜话题（话题 / 热搜）采样。
+- **节奏**：大约每天一个新话题，每次采集约 200 条热门博文，语料库持续增长。
+- **规模**：目前 1000+ 条，并在增加。
+- **语言**：中文（普通话；包含网络用语、饭圈黑话与中英夹杂）。
+- **分析单位**：一行 = 一条微博博文。
+- **模型**：背景提取与打标目前使用 **Qwen3.7-Max**（撰写时的最新版本）；模型如有更新会在此说明。
+- **标注**：两层，AI 生成的初标，加上人工复核的抽样子集（见[复核层](#review-layer)）。
+- **格式**：Hugging Face 上为 CSV（自动转换为 Parquet）；单一 `train` 划分。
+- **许可**：CC BY-NC 4.0，仅供**非商业学术研究**使用（见[许可与署名](#license)）。
+
+<Heading level={2}>2. 语料库是怎么构建的</Heading>
+
+每天的一批数据都走同一条流水线：
+
+1. **选话题。** 挑选一个有一定体量 / 热度的微博热搜话题，并尽量让每天的选题落在与近期不同的领域。
+2. **采集博文。** 在该话题下抓取约 **200 条热门博文**。
+3. **梳理话题背景（AI 第一遍）。** 由模型（目前为 **Qwen3.7-Max**）阅读该话题，产出一份**背景简报**：事件是什么，以及涉及的关键实体与术语清单。这一步很关键，因为微博话语如果不知道在说谁、说什么，往往根本读不懂。
+4. **给博文打标（AI 第二遍）。** 同一模型第二遍**结合上述背景简报**，为每条博文分配标注标签。
+5. **人工复核。** 每天会抽取一个最多 **50 条**的样本，抽取方式是部分随机、部分按规则命中可能出错的标签，再由人工逐条核对，确认或修正每个标签，结果单独保存进 `reviewed_*` 字段。把初标与这个复核子集对比，就是**准确率 / F1** 的计算依据。
+6. **发布。** 把这批数据追加进数据集。
+
+<Callout type="conclusion" title="为什么用「两遍 AI + 人工在环」的设计">
+  没有背景就给社交媒体话语打标只会产生噪声：一句玩笑会被读成辱骂，一个外号会被读成乱码。先用逐话题的背景简报给模型「垫底」，再每天人工复核一个样本，既能让标签保持可解释，又足够快、能每天跑。
+</Callout>
+
+<Heading level={2}>3. 每一行里有什么</Heading>
+
+每条博文都包含一些元数据、原始文本、一套 **AI 初标**标签，以及一套对应的**人工复核**标签。
+
+<div class="table-wrap">
+
+| 字段 | 含义 |
+|---|---|
+| `hf_public_record_key` | 每行的稳定标识符。 |
+| `date` | 该话题 / 批次的采集日期。 |
+| `keyword` | 该博文所属的热搜关键词 / 话题。 |
+| `text` | 微博博文正文。 |
+| `validity` | *（初标）* 博文是否可用，以及不可用的原因。 |
+| `target_type` | *（初标）* 博文主要在讲什么、或指向什么。 |
+| `stance` | *（初标）* 博文对该对象的立场。 |
+| `emotion_category` | *（初标）* 主导情绪。 |
+| `emotion_subtype` | *（初标）* 该情绪之下更细的类别。 |
+| `mf_main` | *（初标）* 所基于的道德基础（若有）。 |
+| `mf_direction` | *（初标）* 该道德基础的哪一极。 |
+| `satire` | *（初标）* 博文是否为反讽 / 讽刺。 |
+| `review_selected` | 该行是否被抽入当日的人工复核样本。 |
+| `reviewed_validity` … `reviewed_satire` | 上述每个标签的人工核对版本。 |
+
+</div>
+
+<Heading level={2}>4. 标注方案</Heading>
+
+下面是完整的标签取值，也就是这套码本(codebook)。每个维度都有对应的 `reviewed_*` 版本（见[复核层](#review-layer)）。有几个取值采用了非标准拼写，如 `outfit_or_appearence`、`idol_doration`，这些是字段里的原始写法，原样保留。
+
+<Heading level={3}>有效性</Heading>
+
+有效性(validity) 表示博文是否可用，以及不可用的原因。
+
+| 取值 | 含义 |
+|---|---|
+| `general` | 正常、切题的博文，含有可解读的内容。 |
+| `noise` | 离题或无实质内容的噪声（广告、垃圾、乱码、无关闲聊）。 |
+| `stanning_and_other_spamming` | 饭圈式刷屏，即控评、打投应援（饭圈控评、打投）及类似 spam。 |
+
+<Heading level={3}>指向对象类型</Heading>
+
+指向对象类型(target_type) 表示博文主要在讲什么、或指向什么。
+
+| 取值 | 含义 |
+|---|---|
+| `person` | 具体的某个人。 |
+| `outfit_or_appearence` | 某人的穿搭、外形、颜值。 |
+| `action` | 某个行为、举动或事件。 |
+| `opinion` | 某个观点、言论。 |
+| `group_or_organization` | 群体或组织。 |
+| `works_or_creations` | 作品或创作（歌曲、节目、画作、产品…）。 |
+| `scenery` | 风景或场景。 |
+| `others` | 其他。 |
+
+<Heading level={3}>立场</Heading>
+
+立场(stance) 表示博文对其指向对象的态度。
+
+| 取值 | 含义 |
+|---|---|
+| `support` | 支持 / 赞同。 |
+| `oppose` | 反对 / 批评。 |
+| `neutral` | 中立 / 客观。 |
+| `no_clear_stance` | 看不出明确立场。 |
+| `irrelevant` | 实际与该对象无关。 |
+
+<Heading level={3}>情绪大类与细类</Heading>
+
+情绪大类(emotion_category) 是主导情绪，情绪细类(emotion_subtype) 是其之下更细的情绪。
+
+| emotion_category | emotion_subtype |
+|---|---|
+| `anger`（愤怒） | personal_anger, moral_outrage, fury |
+| `disgust`（厌恶） | physical_disgust, moral_contemp, rejection |
+| `annoyance`（烦躁） | annoyance |
+| `like`（喜欢） | idol_doration, simple_liking, admiration, solidarity |
+| `sadness`（悲伤） | disappointed, empathy, grieve, hopeless |
+| `happiness`（快乐） | simple_happy, pride, gloat, looking_forward_and_hope |
+| `fear`（恐惧） | anxious, fear, concerned |
+| `surprise`（惊讶） | astounded, happily_surprised, shock |
+| `none`（无） | general |
+| `uncertain`（不确定） | uncertain |
+
+<Heading level={3}>道德框架</Heading>
+
+主道德基础(mf_main) 是博文所基于的道德基础，取自道德基础理论(Moral Foundations Theory)；道德方向(mf_direction) 表示所表达的是该基础的哪一极，因此取值取决于 mf_main。
+
+| mf_main | mf_direction |
+|---|---|
+| `care_vs_harm`（关怀 / 伤害） | care · harm |
+| `fairness_vs_cheating`（公平 / 欺骗） | fairness · cheating |
+| `loyalty_vs_betrayal`（忠诚 / 背叛） | loyalty · betrayal |
+| `authority_vs_subversion`（权威 / 颠覆） | authority · subversion |
+| `sanctity_vs_degradation`（神圣 / 堕落） | sanctity · degradation |
+| `liberty_vs_oppression`（自由 / 压迫） | liberty · oppression |
+| `none`（无） | none |
+
+`mf_direction` 另外还允许独立取值 `uncertain`。
+
+<Heading level={3}>反讽</Heading>
+
+反讽(satire) 标注博文是否使用了反讽。
+
+| 取值 | 含义 |
+|---|---|
+| `yes` | 使用了反语、讽刺或反讽，字面措辞可能与真实含义相反。 |
+| `no` | 直白 / 真诚。 |
+
+<Heading level={3} id="review-layer">复核层</Heading>
+
+上面每个字段都有一个 `reviewed_*` 对应版本，另外还有 `review_selected` 标记。
+
+- **`review_selected`**：该行是否被抽去人工复核。抽取方式是**部分随机、部分按规则**，把看起来可能标错的行挑出来重点核对。
+- **`reviewed_*`**：人工判定结果。若与初标**一致**，说明原标注被判为正确；若**不一致**，说明已被修正。
+- 在复核子集上把初标与 `reviewed_*` 对比，正是打标**准确率 / F1** 的计算方式。
+
+<Heading level={2}>5. 可以用来做什么研究</Heading>
+
+因为选题刻意在不同领域间轮换，又因为部分标签专门标出了**饭圈式刷屏(stanning)等 spam**，这个语料库尤其适合：
+
+- **社群与亚文化语言**：观察特定社群、亚文化到底怎么说话；`stanning_and_other_spamming` 这个有效性取值、以及像 `idol_doration` 这样带饭圈色彩的情绪，都是特意设置的。
+- **不同社群对比**：面对可比的事件，不同社群是否表现出不同的用语习惯、框架与情绪语域。
+- **追踪网络流行语**：跟踪流行词与梗如何冒头、扩散、消退，横跨不同话题与日期。
+- **社会语言学视角的用语变化**：在一个持续增长、带日期的语料库上追踪用语随时间的变化。
+- **真实语境下的立场、情绪与道德框架**：在杂乱的真实文本上做中文立场 / 情绪 / 道德基础分类。
+- **AI 与人工标注对比**：初标与 `reviewed_*` 的划分是现成的基准，也是所报告准确率 / F1 的依据。
+
+<Heading level={2}>6. 局限与负责任使用</Heading>
+
+<Callout type="conclusion" title="使用前请阅读">
+  - **大部分标签由 AI 生成**（目前为 Qwen3.7-Max）。只有每日抽样（最多 50 条）经过人工核对，需要金标时请使用 `review_selected` / `reviewed_*` 字段。
+  - **选择偏差。** 话题选自热搜，博文取的是*热门*那些，因此这并非微博的随机样本。
+  - **部分类别涉及主观判断**（如 `emotion_subtype`、`stance`、`target_type`），会存在标注者主观性。
+  - **隐私与版权。** 语料库只保存博文正文与话题 / 日期，不含用户名或个人资料。原始博文仍归其作者所有，受微博服务条款约束；请勿用于对个人的画像或针对。
+</Callout>
+
+<Heading level={2} id="license">7. 许可与署名</Heading>
+
+<Callout type="conclusion" title="CC BY-NC 4.0 · 仅限非商业研究">
+  **标注与汇编**部分以 **CC BY-NC 4.0** 发布：可免费用于非商业学术研究，并须署名 maikurokosmos。**原始博文文本**的知识产权仍归其原作者，并受微博服务条款约束，此处仅为研究目的转载。请勿将本数据集用于商业用途，或用于识别 / 针对个人。
+</Callout>
+
+<Heading level={2}>8. 参与审计或反馈</Heading>
+
+<Callout type="conclusion" title="欢迎共建者与审计者">
+  本语料库主要由 AI 打标，仅对每日样本做人工核对，因此**独立审计确实能让它变得更好**。如果你愿意帮忙复核标签、发现系统性错误、质疑码本里的某个类别，或只是有建议，欢迎联系：**[maikurokosmos@gmail.com](mailto:maikurokosmos@gmail.com)**。修正与批评都欢迎。
+</Callout>

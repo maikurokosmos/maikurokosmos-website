@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSection, secLabel, formatDate } from '../config/site';
+import { DATASETS } from '../config/datasets';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const section = getSection('tech')!;
+const accent = section.accent;
+---
+
+<BaseLayout title={`${t('datasets.title')} · ${secLabel(section, lang)}`} description={t('datasets.lead')}>
+  <section class="ds">
+    <div class="container">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href={localizedHref('/', lang)}>{t('crumb.home')}</a><span aria-hidden="true">/</span>
+        <a href={localizedHref('/tech', lang)}>{secLabel(section, lang)}</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{t('datasets.title')}</span>
+      </nav>
+
+      <span class="eyebrow">{t('datasets.title')}</span>
+      <h1>{t('datasets.title')}</h1>
+      <p class="lead">{t('datasets.lead')}</p>
+
+      <div class="ds-grid">
+        {DATASETS.map((d) => {
+          const title = lang === 'zh' ? d.titleZh : d.titleEn;
+          const blurb = lang === 'zh' ? d.blurbZh : d.blurbEn;
+          const tags = lang === 'zh' ? d.tagsZh : d.tags;
+          return (
+            <a class="card ds-card" href={localizedHref(d.href, lang)} style={`border-top-color:${accent}`}>
+              <div class="ds-chips">
+                <span class="ds-chip" style={`background:${accent}`}>{t('datasets.growing')}</span>
+                <time class="ds-date">{formatDate(d.date, lang)}</time>
+              </div>
+              <h3 class="ds-title">{title}</h3>
+              <p class="ds-blurb">{blurb}</p>
+              {tags.length > 0 && (
+                <div class="tag-row">{tags.map((tg) => <span class="tag">{tg}</span>)}</div>
+              )}
+              <span class="ds-go">{t('datasets.open')}</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ds { padding-block: 56px; }
+  .crumbs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.88rem; color: var(--c-muted); margin-bottom: 20px; }
+  .crumbs a { color: var(--c-muted); }
+  .crumbs a:hover { color: var(--c-purple); }
+  .lead { font-size: 1.05rem; color: var(--c-muted); max-width: 42em; }
+
+  .ds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .ds-card {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    color: var(--c-text);
+    border-top: 3px solid var(--c-border);
+  }
+  .ds-chips { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+  .ds-chip {
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .ds-date { font-size: 0.82rem; color: var(--c-muted); font-variant-numeric: tabular-nums; }
+  .ds-title { font-size: 1.25rem; line-height: 1.2; margin: 0 0 10px; }
+  .ds-blurb { color: var(--c-muted); font-size: 0.96rem; margin: 0 0 16px; }
+
+  /* —— tags (shared look, mirrors readings) —— */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .tag {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: var(--c-purple);
+    background: var(--c-bg-alt);
+    border: 1px solid var(--c-border);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  .ds-go {
+    margin-top: auto;
+    align-self: flex-start;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--c-ink);
+    background: #fff;
+    border: 1px solid var(--c-border);
+    border-radius: 999px;
+    padding: 9px 18px;
+  }
+  .ds-card:hover .ds-go { border-color: var(--c-purple); color: var(--c-purple); }
+</style>
