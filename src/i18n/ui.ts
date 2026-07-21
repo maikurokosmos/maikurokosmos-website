@@ -45,8 +45,10 @@ export const ui: Record<Lang, Record<string, string>> = {
 
     // —— readings ——
     'readings.title': 'readings',
-    'readings.lead': 'close-reading projects on language, translation, and books.',
+    'readings.lead': 'close-reading projects and quick notes on language, translation, and books.',
     'readings.series': 'series',
+    'readings.casual': 'casual notes',
+    'readings.casualEmpty': 'no notes yet — coming soon.',
     'readings.openSeries': 'open series →',
 
     // —— datasets ——
@@ -114,8 +116,10 @@ export const ui: Record<Lang, Record<string, string>> = {
 
     // —— readings ——
     'readings.title': '研读',
-    'readings.lead': '关于语言、翻译与书籍的细读项目。',
+    'readings.lead': '关于语言、翻译与书籍的细读项目和随手笔记。',
     'readings.series': '系列',
+    'readings.casual': '随手笔记',
+    'readings.casualEmpty': '暂无笔记，敬请期待。',
     'readings.openSeries': '进入系列 →',
 
     // —— datasets ——

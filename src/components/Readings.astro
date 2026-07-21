@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getSection, secLabel } from '../config/site';
-import { READING_SERIES } from '../config/readings';
+import { getSection, secLabel, formatDate } from '../config/site';
+import { READING_SERIES, CASUAL_NOTES } from '../config/readings';
 import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -42,6 +42,40 @@ const accent = section.accent;
           );
         })}
       </div>
+
+      <!-- ===== casual notes ===== -->
+      <h2 class="block-head">{t('readings.casual')}</h2>
+      {CASUAL_NOTES.length > 0 ? (
+        <ul class="notes">
+          {CASUAL_NOTES.map((n) => {
+            const title = lang === 'zh' ? n.titleZh : n.titleEn;
+            const tags = lang === 'zh' ? n.tagsZh : n.tags;
+            return (
+              <li>
+                <a class="note-row" href={n.href ?? '#'}>
+                  <div class="note-main">
+                    <span class="note-headline">
+                      <svg class="note-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 3v5h5" />
+                        <line x1="9" y1="13" x2="15" y2="13" />
+                        <line x1="9" y1="17" x2="13" y2="17" />
+                      </svg>
+                      <span class="note-title">{title}</span>
+                    </span>
+                    <time class="note-date">{formatDate(n.date, lang)}</time>
+                  </div>
+                  {tags.length > 0 && (
+                    <div class="tag-row note-tags">{tags.map((tg) => <span class="tag tag--sm">{tg}</span>)}</div>
+                  )}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p class="notes-empty">{t('readings.casualEmpty')}</p>
+      )}
     </div>
   </section>
 </BaseLayout>
@@ -110,4 +144,36 @@ const accent = section.accent;
     padding: 9px 18px;
   }
   .series-card:hover .series-go { border-color: var(--c-purple); color: var(--c-purple); }
+
+  /* —— casual notes list —— */
+  .notes { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--c-border); }
+  .note-row {
+    display: block;
+    padding: 16px 6px;
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-text);
+    transition: background 0.15s ease;
+  }
+  .note-row:hover { background: var(--c-bg-alt); }
+  .note-main { display: flex; align-items: baseline; gap: 16px; }
+  .note-headline { flex: 1 1 auto; min-width: 0; display: inline-flex; align-items: center; gap: 10px; }
+  .note-doc { flex: 0 0 auto; width: 16px; height: 16px; color: var(--c-purple); }
+  .note-title { font-weight: 600; color: var(--c-ink); font-size: 1.02rem; }
+  .note-date { flex: 0 0 auto; font-size: 0.85rem; color: var(--c-muted); font-variant-numeric: tabular-nums; }
+  .note-tags { margin-top: 8px; margin-left: 26px; }
+
+  /* —— casual notes empty state —— */
+  .notes-empty {
+    margin: 0;
+    padding: 22px 6px;
+    border-top: 1px solid var(--c-border);
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-muted);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 640px) {
+    .note-main { flex-wrap: wrap; gap: 4px; }
+    .note-date { width: 100%; }
+  }
 </style>
