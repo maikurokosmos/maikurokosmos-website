@@ -1,0 +1,46 @@
+---
+// 小链接标签：跟在一行文字右边的胶囊按钮（锁链 icon + 文字 + 淡阴影），新窗口打开。
+// 用法：- 视频标题 <LinkTag href="https://..." />
+// 默认文字按页面语言：「视频链接」/「video」；可用 label 覆盖。
+import { getLangFromUrl } from '../../i18n/utils';
+
+interface Props {
+  href: string;
+  label?: string;
+}
+const { href, label } = Astro.props;
+const text = label ?? (getLangFromUrl(Astro.url) === 'zh' ? '视频链接' : 'video');
+---
+
+<a class="link-tag" href={href} target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+  </svg>
+  {text}
+</a>
+
+<style>
+  .link-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    padding: 1px 9px;
+    vertical-align: 1px;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.6;
+    white-space: nowrap;
+    color: var(--c-purple);
+    background: #fff;
+    border: 1px solid var(--c-border);
+    border-radius: 999px;
+    box-shadow: 0 1px 4px rgba(33, 10, 53, 0.1);
+    text-decoration: none;
+    transition: box-shadow 0.15s ease, color 0.15s ease;
+  }
+  .link-tag:hover { color: var(--c-pink); box-shadow: 0 2px 8px rgba(33, 10, 53, 0.16); }
+  .link-tag svg { width: 12px; height: 12px; }
+</style>

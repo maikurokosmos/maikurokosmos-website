@@ -118,6 +118,7 @@ export const SECTIONS: Section[] = [
       { label: 'choir', labelZh: '合唱', slug: 'choir', blurb: 'choir works and performances', blurbZh: '合唱作品与演出', color: '#881ed3' },
       { label: 'casual cover', labelZh: '随性翻唱', slug: 'casual-cover', blurb: 'casual covers', blurbZh: '随性翻唱', color: '#b42ed0' },
       { label: 'critique', labelZh: '乐评', slug: 'critique', blurb: 'music critique and appreciation', blurbZh: '音乐评论与赏析', color: '#6f1fb8' },
+      { label: 'lyrics attempts', labelZh: '作词与填词尝试', slug: 'lyrics-attempts', blurb: 'my attempts at writing original lyrics and setting new words to existing songs', blurbZh: '我的作词，以及为已有歌曲重新填词的尝试', color: '#c42a9a' },
     ],
   },
 ];

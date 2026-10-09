@@ -224,6 +224,17 @@ package.json
 - Google Sheet 拉取失败时首页**降级为无 music 的 feed**（try/catch），不会让整个 build 挂掉。
 - 子板块 chip 颜色来自 `site.ts` 里每个 `SubSection` 的 `color` 字段。
 
+### 音乐 · 作词与填词尝试（`/music/lyrics-attempts`，已实施）
+
+- 长文型，用 **`lyrics` collection**（`src/content/music/lyrics-attempts/{key}-{en|zh}.mdx`），与哈利波特一样 **en/zh 成对、靠 `key` 配对，`key` 即 URL slug**；只有一个语言版本时两种语言路由都显示它。
+- frontmatter：`lang`、`key`、`type`（`adaptation`=填词 / `original`=作词）、`languages`（如 `["korean", "mandarin"]`，标签文字在 `config/lyrics.ts`）、`original`（原曲署名）、`date`（必填，列表按它倒序，两个语言版本保持一致）。
+- 逐句对照沿用哈利波特的 `Compare` / `Row` / `Cell` / `Hl`：原词、填词两栏 + `slot="note"` 放翻译与注释；黄色 `Hl` = 未保留的汉字词，同色 `Hl c="N"` = 两栏对应保留的汉字词。
+- 英文版翻译正文、说明和注释；歌词本身保持韩语原文 + 中文填词。注释里**用引号括起来讨论的词**（如“伤处”“需要”）保持原文不译，引号外的说明正常译成英文。
+- 外链视频列表用 `mdx/LinkTag.astro`（标题右侧的「视频链接」小胶囊）。
+- 显示字体（得意黑 Oblique）没有韩文字形，韩文会回落成正体：在 display 字体处用 `KoText.astro` 包一下，自动把韩文斜体（目前只用在文章 kicker；`Compare` 列名站主要求不斜体）。
+- ⚠️ 站主**不用感叹号**（中英文都不要），写/改文案时一律避免。
+- feed adapter：`lib/lyrics-content.ts`；首页 feed 单独拉取，不受 Google Sheet 失败影响。
+
 ⚠️ **写文章时必填 frontmatter**：`harryPotter` collection 新增了 `date`（ISO，如 `"2026-07-18"`，**必填**，决定 feed 排序）、`blurb`、`tags`（feed 里显示的一句话简介与标签，用该文件自己的语言写）。en/zh 成对文件靠 `book` + `key` 配对成一条 feed 条目，所以**两个语言版本的 `date` 应保持一致**。
 
 ---

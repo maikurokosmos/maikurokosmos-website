@@ -1,0 +1,14 @@
+---
+import LyricsArticle from '../../../components/LyricsArticle.astro';
+import { getLyricsWorks } from '../../../lib/lyrics-content';
+
+export async function getStaticPaths() {
+  // One page per work, in this locale's language when a translation exists.
+  const works = await getLyricsWorks('en');
+  return works.map((e) => ({ params: { slug: e.data.key }, props: { entryId: e.id } }));
+}
+
+const { entryId } = Astro.props as { entryId: string };
+---
+
+<LyricsArticle entryId={entryId} />

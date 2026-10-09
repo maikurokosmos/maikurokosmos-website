@@ -41,29 +41,14 @@ export interface CasualNote {
   href?: string;
 }
 
-export const CASUAL_NOTES: CasualNote[] = [
-  {
-    titleEn: 'why "muggle" resists a clean translation',
-    titleZh: '为什么“muggle”很难干净地翻译',
-    date: '2026-05-28',
-    tags: ['translation', 'wordplay'],
-    tagsZh: ['翻译', '文字游戏'],
-    href: '#',
-  },
-  {
-    titleEn: 'honorifics that quietly vanish in english',
-    titleZh: '在英文里悄悄消失的敬语',
-    date: '2026-04-15',
-    tags: ['pragmatics', 'register'],
-    tagsZh: ['语用', '语域'],
-    href: '#',
-  },
-  {
-    titleEn: 'reduplication in chinese onomatopoeia',
-    titleZh: '汉语拟声词里的重叠',
-    date: '2026-03-02',
-    tags: ['phonology', 'chinese'],
-    tagsZh: ['音系', '中文'],
-    href: '#',
-  },
-];
+// Empty for now → the "casual notes" block is hidden on the readings page.
+// Add an entry to bring it back, e.g.:
+//   {
+//     titleEn: 'why "muggle" resists a clean translation',
+//     titleZh: '为什么“muggle”很难干净地翻译',
+//     date: '2026-05-28',
+//     tags: ['translation', 'wordplay'],
+//     tagsZh: ['翻译', '文字游戏'],
+//     href: '/linguistics/readings/…',
+//   },
+export const CASUAL_NOTES: CasualNote[] = [];

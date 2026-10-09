@@ -52,9 +52,11 @@ export async function getSectionEntries(section: string, limit?: number): Promis
  * hiccup there degrades to a music-less feed rather than failing the build.
  */
 export async function getLatestEntries(limit = 5): Promise<FeedEntry[]> {
-  const [tech, linguistics] = await Promise.all([
+  // Lyrics live in the repo (not the Sheet), so they stay in even if the Sheet fails.
+  const [tech, linguistics, lyrics] = await Promise.all([
     (await import('./tech-content')).getTechEntries(),
     (await import('./linguistics-content')).getLinguisticsEntries(),
+    (await import('./lyrics-content')).getLyricsEntries(),
   ]);
 
   let music: FeedEntry[] = [];
@@ -64,7 +66,7 @@ export async function getLatestEntries(limit = 5): Promise<FeedEntry[]> {
     console.warn('[feed] music events unavailable, omitting from homepage feed:', err);
   }
 
-  const entries = [...tech, ...linguistics, ...music];
+  const entries = [...tech, ...linguistics, ...lyrics, ...music];
   entries.sort(byDateDesc);
   return entries.slice(0, limit);
 }

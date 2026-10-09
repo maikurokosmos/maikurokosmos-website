@@ -1,0 +1,144 @@
+---
+// Detail page for one lyrics work: same reading chrome as HpChapter
+// (progress bar + auto TOC from h2/h3), with the work's tags and date in the hero.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { getSubSection, secLabel, subLabel, formatDate } from '../config/site';
+import { lyricsTags } from '../config/lyrics';
+import KoText from './KoText.astro';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+
+interface Props {
+  entryId: string;
+}
+
+const { entryId } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { section, sub } = getSubSection('music', 'lyrics-attempts')!;
+
+const entry = (await getCollection('lyrics')).find((e) => e.id === entryId)!;
+const { Content } = await render(entry);
+const { title, original, date, type, languages, blurb } = entry.data;
+---
+
+<BaseLayout title={title} description={blurb || subLabel(sub, lang)}>
+  <div class="reading-progress" aria-hidden="true"><span id="rp-bar"></span></div>
+
+  <section class="art-hero">
+    <div class="container">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href={localizedHref('/', lang)}>{t('crumb.home')}</a><span aria-hidden="true">/</span>
+        <a href={localizedHref(`/${section.slug}`, lang)}>{secLabel(section, lang)}</a><span aria-hidden="true">/</span>
+        <a href={localizedHref(`/${section.slug}/${sub.slug}`, lang)}>{subLabel(sub, lang)}</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{title}</span>
+      </nav>
+      {original && <p class="art-kicker"><KoText text={original} /></p>}
+      <h1 class="art-title">{title}</h1>
+      <div class="art-meta">
+        <time datetime={date}>{formatDate(date, lang)}</time>
+        {lyricsTags(type, languages, lang).map((tg) => <span class="tag">{tg}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container art-wrap" data-art-wrap>
+      <aside class="toc" data-toc aria-label="On this page" hidden>
+        <p class="toc-head">{t('common.onThisPage')}</p>
+        <ul></ul>
+      </aside>
+      <article class="prose art-body">
+        <Content />
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // 目录：客户端扫描正文里的 h2/h3 —— 普通 `##` 和自定义 <Heading> 组件都能进目录。
+  const slugify = (s: string) =>
+    s.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w一-鿿-]/g, '').replace(/-+/g, '-') || 'section';
+
+  const wrap = document.querySelector('[data-art-wrap]');
+  const toc = document.querySelector('[data-toc]');
+  const prose = document.querySelector('.art-body');
+  if (wrap && toc && prose) {
+    const ul = toc.querySelector('ul')!;
+    const heads = prose.querySelectorAll('h2, h3');
+    const seen: Record<string, number> = {};
+    heads.forEach((h) => {
+      let id = h.id;
+      if (!id) {
+        id = slugify(h.textContent || '');
+        if (seen[id]) id = `${id}-${++seen[id]}`;
+        else seen[id] = 1;
+        h.id = id;
+      }
+      const li = document.createElement('li');
+      li.className = h.tagName === 'H3' ? 'toc-l3' : 'toc-l2';
+      const a = document.createElement('a');
+      a.href = `#${id}`;
+      a.textContent = (h.textContent || '').trim();
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    if (heads.length) {
+      (toc as HTMLElement).hidden = false;
+      wrap.classList.add('has-toc');
+    }
+  }
+
+  const bar = document.getElementById('rp-bar');
+  if (bar) {
+    const update = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      bar.style.width = (max > 0 ? (el.scrollTop / max) * 100 : 0) + '%';
+    };
+    document.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>
+
+<style>
+  .reading-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: transparent; z-index: 60; }
+  #rp-bar { display: block; height: 100%; width: 0; background: var(--c-purple); transition: width 0.08s linear; }
+
+  .art-hero { background: var(--c-hero); padding-block: 40px 26px; border-bottom: 1px solid var(--c-border); }
+  .crumbs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; color: var(--c-muted); margin-bottom: 16px; }
+  .crumbs a { color: var(--c-muted); }
+  .crumbs a:hover { color: var(--c-purple); }
+  .art-kicker { font-family: var(--font-display); font-size: 0.8rem; color: var(--c-purple); margin: 0 0 8px; }
+  .art-title { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.1; margin: 0; }
+  .art-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; font-size: 0.85rem; color: var(--c-muted); }
+  .art-meta time { margin-right: 6px; font-variant-numeric: tabular-nums; }
+  .tag {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: var(--c-purple);
+    background: #fff;
+    border: 1px solid var(--c-border);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  .art-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; align-items: start; }
+  .art-wrap.has-toc { grid-template-columns: 220px minmax(0, 1fr); }
+  .art-body { max-width: 70ch; }
+
+  .toc { position: sticky; top: calc(var(--header-h) + 20px); font-size: 0.9rem; }
+  .toc-head { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-muted); margin: 0 0 10px; }
+  .toc ul { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--c-border); }
+  .toc :global(li) { margin: 0; }
+  .toc :global(a) { display: block; padding: 5px 0 5px 14px; margin-left: -2px; color: var(--c-muted); border-left: 2px solid transparent; }
+  .toc :global(a:hover) { color: var(--c-purple); border-left-color: var(--c-purple); }
+  .toc :global(.toc-l3 a) { padding-left: 26px; font-size: 0.85rem; }
+
+  @media (max-width: 860px) {
+    .art-wrap.has-toc { grid-template-columns: 1fr; gap: 0; }
+    .toc { display: none; }
+  }
+</style>

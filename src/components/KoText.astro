@@ -1,0 +1,19 @@
+---
+// Renders text with every Hangul run wrapped in <span lang="ko">, slanted.
+// The display font (Smiley Sans Oblique) is slanted by design but has no Hangul,
+// so Korean falls back to an upright font. Use this wherever display-font text
+// can contain Korean (article kicker, Compare column labels…).
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+const HANGUL = '\\u1100-\\u11FF\\u3130-\\u318F\\uAC00-\\uD7AF';
+// a run = Hangul words plus the spaces / commas between them
+const parts = text.split(new RegExp(`([${HANGUL}]+(?:[\\s,]+[${HANGUL}]+)*)`));
+---
+
+{parts.map((p, i) => (i % 2 === 1 ? <span class="ko" lang="ko">{p}</span> : p))}
+
+<style>
+  .ko { font-style: italic; }
+</style>

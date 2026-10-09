@@ -78,6 +78,9 @@ export const ui: Record<Lang, Record<string, string>> = {
     'music.video': 'watch',
     'music.readMore': 'read more',
     'music.explore': 'explore by type',
+
+    // —— lyrics attempts ——
+    'lyrics.empty': 'nothing here yet. check back soon.',
   },
   zh: {
     // —— chrome ——
@@ -148,5 +151,8 @@ export const ui: Record<Lang, Record<string, string>> = {
     'music.video': '观看视频',
     'music.readMore': '查看详情',
     'music.explore': '按类型浏览',
+
+    // —— lyrics attempts ——
+    'lyrics.empty': '还没有发布作品，敬请期待。',
   },
 };

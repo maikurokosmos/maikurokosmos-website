@@ -43,7 +43,8 @@ const accent = section.accent;
         })}
       </div>
 
-      <!-- ===== casual notes ===== -->
+      <!-- ===== casual notes (hidden until the first note is published) ===== -->
+      {CASUAL_NOTES.length > 0 && (<>
       <h2 class="block-head">{t('readings.casual')}</h2>
       <ul class="notes">
         {CASUAL_NOTES.map((n) => {
@@ -72,6 +73,7 @@ const accent = section.accent;
           );
         })}
       </ul>
+      </>)}
     </div>
   </section>
 </BaseLayout>

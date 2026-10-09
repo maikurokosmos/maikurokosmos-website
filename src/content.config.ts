@@ -29,4 +29,28 @@ const harryPotter = defineCollection({
   }),
 });
 
-export const collections = { harryPotter };
+// "Lyrics attempts" (作词与填词尝试) under music. Like harryPotter, files are
+// -en / -zh pairs linked by a shared `key`, which is also the URL slug. A work
+// with only one language file is served on both locales' routes.
+const lyrics = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/music/lyrics-attempts' }),
+  schema: z.object({
+    title: z.string(),
+    lang: z.enum(['en', 'zh']),
+    /** Logical id shared by the en/zh pair + URL slug, e.g. "into-the-new-world" */
+    key: z.string(),
+    /** adaptation = 填词 (new words to an existing song), original = 作词 */
+    type: z.enum(['adaptation', 'original']),
+    /** Language tags, e.g. ["korean", "mandarin"] — labels live in config/lyrics.ts. */
+    languages: z.array(z.string()).default([]),
+    /** Original song credit shown above the title, e.g. "少女时代 · 다시 만난 세계". */
+    original: z.string().default(''),
+    /** ISO publish date, e.g. "2026-10-08" — sorts the list (newest first) and the feeds. */
+    date: z.string(),
+    /** One-line summary for the list and feeds (in this file's own language). */
+    blurb: z.string().default(''),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { harryPotter, lyrics };
