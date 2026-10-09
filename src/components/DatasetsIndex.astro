@@ -1,26 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getSection, secLabel, formatDate } from '../config/site';
+import { getSection, getSubSection, secLabel, subLabel, formatDate } from '../config/site';
 import { DATASETS } from '../config/datasets';
 import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+// inner pages reuse the subsection name from site.ts so they always match the outer card / nav
+const datasetsLabel = subLabel(getSubSection('tech', 'datasets')!.sub, lang);
 const section = getSection('tech')!;
 const accent = section.accent;
 ---
 
-<BaseLayout title={`${t('datasets.title')} · ${secLabel(section, lang)}`} description={t('datasets.lead')}>
+<BaseLayout title={`${datasetsLabel} · ${secLabel(section, lang)}`} description={t('datasets.lead')}>
   <section class="ds">
     <div class="container">
       <nav class="crumbs" aria-label="Breadcrumb">
         <a href={localizedHref('/', lang)}>{t('crumb.home')}</a><span aria-hidden="true">/</span>
         <a href={localizedHref('/tech', lang)}>{secLabel(section, lang)}</a><span aria-hidden="true">/</span>
-        <span aria-current="page">{t('datasets.title')}</span>
+        <span aria-current="page">{datasetsLabel}</span>
       </nav>
 
-      <span class="eyebrow">{t('datasets.title')}</span>
-      <h1>{t('datasets.title')}</h1>
+      <span class="eyebrow">{datasetsLabel}</span>
+      <h1>{datasetsLabel}</h1>
       <p class="lead">{t('datasets.lead')}</p>
 
       <div class="ds-grid">

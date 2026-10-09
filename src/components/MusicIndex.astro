@@ -5,6 +5,8 @@ import {
 } from '../config/site';
 import { getEvents, type MusicEvent } from '../lib/music-events';
 import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+import { getSectionEntries } from '../lib/feed';
+import LatestFeed from './LatestFeed.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -15,6 +17,9 @@ const sep = lang === 'zh' ? '：' : ': ';
 const upcoming = await getEvents('upcoming');
 const past = await getEvents('past');
 const PAGE = 10;
+
+// Latest content feed — same as the other section pages (lyrics + past events).
+const latest = await getSectionEntries('music', 10);
 
 // per-language field pickers (fall back to the other language when empty)
 const pick = (zh: string, en: string) => (lang === 'zh' ? zh || en : en || zh);
@@ -59,10 +64,11 @@ function ytThumb(url: string): string | null {
         {section.children.map((sub) => (
           <a class="card sub-card" href={localizedHref(`/${section.slug}/${sub.slug}`, lang)}>
             <h3>{subLabel(sub, lang)}</h3>
-            <p>{subBlurb(sub, lang)}</p>
           </a>
         ))}
       </div>
+
+      <LatestFeed section={section} entries={latest} />
     </div>
   </section>
 
@@ -193,8 +199,7 @@ function ytThumb(url: string): string | null {
     gap: 24px;
   }
   .sub-card { display: flex; flex-direction: column; padding: 26px; color: var(--c-text); }
-  .sub-card h3 { margin-bottom: 8px; }
-  .sub-card p { color: var(--c-muted); font-size: 0.95rem; margin: 0; }
+  .sub-card h3 { margin: 0; }
 
   /* —— events: slider toggle (kept) —— */
   .ev-tabs { display: inline-flex; gap: 6px; padding: 4px; background: #fff; border: 1px solid var(--c-border); border-radius: 999px; margin-bottom: 22px; }

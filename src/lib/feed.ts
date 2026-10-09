@@ -36,37 +36,40 @@ export const feedTitle = (e: FeedEntry, lang: Lang) => (lang === 'zh' ? e.titleZ
 export const feedBlurb = (e: FeedEntry, lang: Lang) => (lang === 'zh' ? e.blurbZh || e.blurbEn : e.blurbEn || e.blurbZh);
 export const feedTags = (e: FeedEntry, lang: Lang) => (lang === 'zh' ? e.tagsZh : e.tags);
 
-/**
- * One section's content, newest first — used by the section index pages.
- * Music is excluded: its section page renders events with its own richer UI.
- */
+/** One section's content, newest first — used by the section index pages. */
 export async function getSectionEntries(section: string, limit?: number): Promise<FeedEntry[]> {
   if (section === 'tech') return (await import('./tech-content')).getTechEntries(limit);
   if (section === 'linguistics') return (await import('./linguistics-content')).getLinguisticsEntries(limit);
+  // Music's own page lists events right below the feed, so its feed is lyrics only.
+  if (section === 'music') return (await import('./lyrics-content')).getLyricsEntries(limit);
   return [];
+}
+
+/** Lyrics (in the repo) + past events (Google Sheet; a Sheet hiccup just drops the events). */
+async function getMusicFeed(): Promise<FeedEntry[]> {
+  const lyrics = await (await import('./lyrics-content')).getLyricsEntries();
+  let events: FeedEntry[] = [];
+  try {
+    events = await (await import('./music-content')).getMusicEntries();
+  } catch (err) {
+    console.warn('[feed] music events unavailable, omitting from feed:', err);
+  }
+  return [...lyrics, ...events];
 }
 
 /**
  * Every section mixed into one reverse-chronological feed — the homepage's
- * "recent updates". Music is fetched from a Google Sheet at build time, so a
- * hiccup there degrades to a music-less feed rather than failing the build.
+ * "recent updates". Music events come from a Google Sheet at build time, so a
+ * hiccup there degrades to an event-less feed rather than failing the build.
  */
 export async function getLatestEntries(limit = 5): Promise<FeedEntry[]> {
-  // Lyrics live in the repo (not the Sheet), so they stay in even if the Sheet fails.
-  const [tech, linguistics, lyrics] = await Promise.all([
+  const [tech, linguistics, music] = await Promise.all([
     (await import('./tech-content')).getTechEntries(),
     (await import('./linguistics-content')).getLinguisticsEntries(),
-    (await import('./lyrics-content')).getLyricsEntries(),
+    getMusicFeed(),
   ]);
 
-  let music: FeedEntry[] = [];
-  try {
-    music = await (await import('./music-content')).getMusicEntries();
-  } catch (err) {
-    console.warn('[feed] music events unavailable, omitting from homepage feed:', err);
-  }
-
-  const entries = [...tech, ...linguistics, ...lyrics, ...music];
+  const entries = [...tech, ...linguistics, ...music];
   entries.sort(byDateDesc);
   return entries.slice(0, limit);
 }

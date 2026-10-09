@@ -5,8 +5,8 @@
 
 export const HP_SERIES = {
   slug: 'harry-potter',
-  /** English display title (kept as authored — this is the column's brand title) */
-  titleEn: 'Harry Potter, The Chinese Version with the Lens of Linguistics',
+  /** English display title (all lowercase, like every title on the site) */
+  titleEn: 'harry potter, the chinese version with the lens of linguistics',
   /** Chinese display title */
   titleZh: '陪你再看一遍哈利·波特',
 };

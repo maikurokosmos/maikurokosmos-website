@@ -1,5 +1,5 @@
 ---
-import { SECTIONS, secLabel, subLabel, subBlurb } from '../config/site';
+import { SECTIONS, secLabel, subLabel } from '../config/site';
 import { getLangFromUrl, useTranslations, localizedHref, switchLocalePath } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -46,7 +46,6 @@ const t = useTranslations(lang);
                   <li>
                     <a href={localizedHref(`/${section.slug}/${child.slug}`, lang)}>
                       <span class="dd-label">{subLabel(child, lang)}</span>
-                      <span class="dd-blurb">{subBlurb(child, lang)}</span>
                     </a>
                   </li>
                 ))}
@@ -177,7 +176,6 @@ const t = useTranslations(lang);
   }
   .dropdown a:hover { background: var(--c-bg-alt); }
   .dd-label { display: block; font-family: var(--font-display); font-weight: 600; font-size: 0.92rem; }
-  .dd-blurb { display: block; font-size: 0.8rem; color: var(--c-muted); margin-top: 2px; }
 
   /* —— hamburger button —— */
   .nav-toggle {

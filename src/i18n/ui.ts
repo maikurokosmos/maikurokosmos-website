@@ -44,14 +44,12 @@ export const ui: Record<Lang, Record<string, string>> = {
     'ph.back': 'Back to',
 
     // —— readings ——
-    'readings.title': 'readings',
     'readings.lead': 'close-reading projects and quick notes on language, translation, and books.',
     'readings.series': 'series',
     'readings.casual': 'casual notes',
     'readings.openSeries': 'open series →',
 
     // —— datasets ——
-    'datasets.title': 'datasets',
     'datasets.lead': 'datasets i compile and release, each with full documentation of how it is collected, built, and labeled.',
     'datasets.open': 'open dataset →',
     'datasets.viewHf': 'view on hugging face ↗',
@@ -117,14 +115,12 @@ export const ui: Record<Lang, Record<string, string>> = {
     'ph.back': '返回',
 
     // —— readings ——
-    'readings.title': '研读',
     'readings.lead': '关于语言、翻译与书籍的细读项目和随手笔记。',
     'readings.series': '系列',
     'readings.casual': '随手笔记',
     'readings.openSeries': '进入系列 →',
 
     // —— datasets ——
-    'datasets.title': '数据集',
     'datasets.lead': '我整理并发布的数据集，每一个都附带完整的采集、构建与标注说明。',
     'datasets.open': '查看数据集 →',
     'datasets.viewHf': '在 Hugging Face 查看 ↗',

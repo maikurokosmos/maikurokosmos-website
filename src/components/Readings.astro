@@ -1,26 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getSection, secLabel, formatDate } from '../config/site';
+import { getSection, getSubSection, secLabel, subLabel, formatDate } from '../config/site';
 import { READING_SERIES, CASUAL_NOTES } from '../config/readings';
 import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+// inner pages reuse the subsection name from site.ts so they always match the outer card / nav
+const readingsLabel = subLabel(getSubSection('linguistics', 'readings')!.sub, lang);
 const section = getSection('linguistics')!;
 const accent = section.accent;
 ---
 
-<BaseLayout title={`${t('readings.title')} · ${secLabel(section, lang)}`} description={t('readings.lead')}>
+<BaseLayout title={`${readingsLabel} · ${secLabel(section, lang)}`} description={t('readings.lead')}>
   <section class="rd">
     <div class="container">
       <nav class="crumbs" aria-label="Breadcrumb">
         <a href={localizedHref('/', lang)}>{t('crumb.home')}</a><span aria-hidden="true">/</span>
         <a href={localizedHref('/linguistics', lang)}>{secLabel(section, lang)}</a><span aria-hidden="true">/</span>
-        <span aria-current="page">{t('readings.title')}</span>
+        <span aria-current="page">{readingsLabel}</span>
       </nav>
 
-      <span class="eyebrow">{t('readings.title')}</span>
-      <h1>{t('readings.title')}</h1>
+      <span class="eyebrow">{readingsLabel}</span>
+      <h1>{readingsLabel}</h1>
       <p class="lead">{t('readings.lead')}</p>
 
       <!-- ===== series ===== -->

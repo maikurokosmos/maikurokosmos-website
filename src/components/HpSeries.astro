@@ -2,12 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
-import { getSection, secLabel } from '../config/site';
+import { getSection, getSubSection, secLabel, subLabel } from '../config/site';
 import { HP_SERIES, HP_BOOKS } from '../config/harry-potter';
 import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+// inner pages reuse the subsection name from site.ts so they always match the outer card / nav
+const readingsLabel = subLabel(getSubSection('linguistics', 'readings')!.sub, lang);
 const section = getSection('linguistics')!;
 const seriesTitle = lang === 'zh' ? HP_SERIES.titleZh : HP_SERIES.titleEn;
 
@@ -49,8 +51,8 @@ const booksView = HP_BOOKS.map((book) => {
       <nav class="crumbs" aria-label="Breadcrumb">
         <a href={localizedHref('/', lang)}>{t('crumb.home')}</a><span aria-hidden="true">/</span>
         <a href={localizedHref('/linguistics', lang)}>{secLabel(section, lang)}</a><span aria-hidden="true">/</span>
-        <a href={localizedHref('/linguistics/readings', lang)}>{t('readings.title')}</a><span aria-hidden="true">/</span>
-        <span aria-current="page">harry potter</span>
+        <a href={localizedHref('/linguistics/readings', lang)}>{readingsLabel}</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{seriesTitle}</span>
       </nav>
       <span class="eyebrow">{t('hp.readingSeries')}</span>
       <h1 class="hp-title">{seriesTitle}</h1>

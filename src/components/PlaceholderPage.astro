@@ -29,7 +29,6 @@ const t = useTranslations(lang);
       </nav>
 
       <h1>{subLabel(sub, lang)}</h1>
-      <p class="lead">{subBlurb(sub, lang)}</p>
 
       <div class="card ph-card" style={`--accent:${section.accent}`}>
         <span class="ph-badge" style={`background:${section.accent}`}>{t('common.comingSoon')}</span>
@@ -52,7 +51,6 @@ const t = useTranslations(lang);
   }
   .crumbs a { color: var(--c-muted); }
   .crumbs a:hover { color: var(--c-purple); }
-  .lead { font-size: 1.1rem; color: var(--c-muted); max-width: 40em; }
 
   .ph-card {
     margin-top: 28px;

@@ -38,10 +38,12 @@ async function getHarryPotterEntries(): Promise<FeedEntry[]> {
     return {
       section: 'linguistics',
       sub: 'readings',
-      titleEn: en?.data.title ?? '',
-      titleZh: zh?.data.title ?? '',
-      blurbEn: en?.data.blurb ?? '',
-      blurbZh: zh?.data.blurb ?? '',
+      // "series：chapter" so the feed shows which column the chapter belongs to
+      titleEn: en ? `${HP_SERIES.titleEn}: ${en.data.title}` : '',
+      titleZh: zh ? `${HP_SERIES.titleZh}：${zh.data.title}` : '',
+      // chapters carry no feed blurb: the series + chapter title says enough
+      blurbEn: '',
+      blurbZh: '',
       tags: en?.data.tags ?? [],
       tagsZh: zh?.data.tags ?? [],
       date: en?.data.date ?? zh?.data.date ?? '',

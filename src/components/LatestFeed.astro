@@ -1,0 +1,82 @@
+---
+// "Latest content" block on a section index page (/tech, /linguistics, /music).
+// Shared so every section's feed looks identical; the data comes from
+// getSectionEntries() in lib/feed.ts.
+import type { Section } from '../config/site';
+import { subLabel, formatDate } from '../config/site';
+import { getLangFromUrl, useTranslations, localizedHref } from '../i18n/utils';
+import { feedTitle, feedBlurb, feedTags, type FeedEntry } from '../lib/feed';
+
+interface Props {
+  section: Section;
+  entries: FeedEntry[];
+}
+
+const { section, entries } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+{entries.length > 0 && (
+  <div class="latest-block">
+    <span class="eyebrow">{t('section.latestEyebrow')}</span>
+    <h2>{t('section.latestHeading')}</h2>
+    <ul class="feed">
+      {entries.map((e) => {
+        const sub = section.children.find((c) => c.slug === e.sub);
+        const blurb = feedBlurb(e, lang);
+        const tags = feedTags(e, lang);
+        return (
+          <li class="feed-item">
+            <a class="feed-row" href={localizedHref(e.href, lang)}>
+              <div class="feed-top">
+                <span class="feed-chip" style={`background:${sub?.color ?? section.accent}`}>{sub ? subLabel(sub, lang) : e.sub}</span>
+                <time class="feed-date">{formatDate(e.date, lang)}</time>
+              </div>
+              <h3 class="feed-title">{feedTitle(e, lang)}</h3>
+              {blurb && <p class="feed-blurb">{blurb}</p>}
+              {tags.length > 0 && (
+                <div class="feed-tags">{tags.map((tg) => <span class="feed-tag">{tg}</span>)}</div>
+              )}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+)}
+
+<style>
+  .latest-block { margin-top: 60px; }
+  .latest-block h2 { font-size: 1.6rem; margin-bottom: 4px; }
+  .feed { list-style: none; margin: 20px 0 0; padding: 0; border-top: 1px solid var(--c-border); }
+  .feed-item { border-bottom: 1px solid var(--c-border); }
+  .feed-row { display: block; padding: 20px 6px; color: var(--c-text); transition: background 0.15s ease; }
+  .feed-row:hover { background: var(--c-bg-alt); }
+  .feed-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .feed-chip {
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .feed-date { font-size: 0.85rem; color: var(--c-muted); font-variant-numeric: tabular-nums; }
+  .feed-title { font-size: 1.15rem; margin: 0; color: var(--c-ink); }
+  .feed-row:hover .feed-title { color: var(--c-purple); }
+  .feed-blurb { color: var(--c-muted); font-size: 0.95rem; margin: 6px 0 0; }
+  .feed-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .feed-tag {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: var(--c-purple);
+    background: #fff;
+    border: 1px solid var(--c-border);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+</style>

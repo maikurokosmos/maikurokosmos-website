@@ -214,12 +214,14 @@ package.json
 
 | 位置 | 取数 | 条数 |
 |---|---|---|
-| 板块首页 `/tech`、`/linguistics` | `getSectionEntries(slug, 10)` | 最新 10 条 |
+| 板块首页 `/tech`、`/linguistics`（共用 `LatestFeed.astro`） | `getSectionEntries(slug, 10)` | 最新 10 条 |
 | 首页「最近更新」 | `getLatestEntries(5)` | 三板块混合，最新 5 条 |
-| `/music` 板块首页 | 不用 feed，沿用自己的演出卡片 UI | — |
+| `/music` 板块首页 | `getSectionEntries('music', 10)`，**只收填词文章**（演出就在下方「演出与活动」里，避免重复） | 最新 10 条 |
 
 - **适配器模式**：每个板块一个 adapter，把各自的原生数据源映射成 `FeedEntry`——`tech-content.ts`（读 `config/datasets.ts`）、`linguistics-content.ts`（读 `harryPotter` collection）、`music-content.ts`（读 Google Sheet）。**接一个新数据源 = 写一个 adapter，渲染层不动。**
 - **music 只收 `past` 演出**：其 `date` 是演出日期而非发布日期，`upcoming`（未来日期）会永久霸占榜首。演出没有详情页，故链到 `/music/{category}`。
+- **哈利波特章节在 feed 里的标题 = 「系列名：章节名」**（如「陪你再看一遍哈利·波特：大难不死的男孩」），**不显示简介**（站主不要自动生成的简介）。
+- **命名一致**：子板块页面里的面包屑 / 标题 / eyebrow 一律用 `site.ts` 里子板块的 `label` / `labelZh`（外层卡片、导航里的名字），不要在 `ui.ts` 另起一个名字。
 - **linguistics 只收正文章节**（`kind === 'chapter'`）：专栏引言 `series-intro` 与每本书的导读 `book-intro` 属于导言性质，是系列页的框架内容，不作为独立条目进 feed。
 - Google Sheet 拉取失败时首页**降级为无 music 的 feed**（try/catch），不会让整个 build 挂掉。
 - 子板块 chip 颜色来自 `site.ts` 里每个 `SubSection` 的 `color` 字段。
