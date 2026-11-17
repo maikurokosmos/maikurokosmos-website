@@ -1,0 +1,101 @@
+---
+layout: ../../../layouts/ArticleLayout.astro
+title: weibo sociolinguistics project
+eyebrow: datasets
+date: 2026 Oct 07
+description: A daily pipeline over Weibo hot-search topics, released as three linked datasets, topic summaries, labeled posts, and weekly label reviews.
+---
+
+import Callout from '../../../components/mdx/Callout.astro';
+import Heading from '../../../components/mdx/Heading.astro';
+
+The **weibo sociolinguistics project** follows one Weibo hot-search topic per research date and studies how people talk about it. Each day's run is released as **three linked datasets** on Hugging Face, so that topic-level context, post-level labels, and human review can each be used on their own or joined together.
+
+<p style="display:flex;flex-wrap:wrap;gap:12px">
+  <a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-topic-summaries" target="_blank" rel="noopener">topic summaries ↗</a>
+  <a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-labeled-posts" target="_blank" rel="noopener">labeled posts ↗</a>
+  <a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-weekly-label-reviews" target="_blank" rel="noopener">weekly label reviews ↗</a>
+</p>
+
+<Heading level={2}>1. at a glance</Heading>
+
+- **Source**: one selected Weibo hot-search topic per research date, with up to 200 of Weibo's popular posts under it.
+- **Cadence**: daily (first research date: 2026 Sept 28). Human review runs weekly.
+- **Size**: about 8,500 labeled posts so far, and counting.
+- **Language**: Chinese.
+- **Join key**: `record_key` (`YYYY-MM-DD::topic::NNN`) for posts, `topic_key` (`YYYY-MM-DD::topic`) for topics.
+
+<Heading level={2}>2. how a day's run works</Heading>
+
+1. **Record the hot-search list** and capture topic metrics.
+2. **Select one research topic.**
+3. **Collect posts.** Weibo's *popular-post* results are traversed in page order, up to 200 entries before deduplication. The research date identifies the batch; it does not filter posts by publication time.
+4. **Summarize the topic.** A language model writes a topic-level account from up to 20 high-interaction posts plus up to 20 longer posts.
+5. **Label every post** in a separate model run, with deterministic validation and cleaning.
+6. **De-identify and publish.** Narrative fields go through a deterministic public-text projection that replaces phone numbers, ID numbers, emails, URLs, Weibo handles, and paired hashtags with placeholders.
+7. **Review weekly.** A sample of the labels is checked by hand and published separately.
+
+<Heading level={2}>3. the three datasets</Heading>
+
+<Heading level={3}>topic summaries</Heading>
+
+One row per research date: the selected topic, the metrics Weibo displayed for it, a model-generated and de-identified summary, and aggregate counts from that day's labeling. It publishes **no individual post text, usernames, or per-post diagnostics**. Released as a single cumulative CSV under **CC BY 4.0**.
+
+<div class="table-wrap">
+
+| field | what it holds |
+|---|---|
+| `topic_key` · `date` · `topic` · `url` | Topic identity, research date, and source URL. |
+| `read_count` · `discuss_count` · `interact_count` · `original_count` | Weibo's displayed topic metrics at capture time. |
+| `description` | Weibo's own topic classification (not a generated description). |
+| `summary` | Model-generated topic summary, after de-identification. |
+| `summary_model` · `summary_prompt_version` · `summary_sampling_version` | Generation metadata. |
+| `labeling_input_count` … `labeling_final_count` | Aggregate counts from the daily labeling run (`final = pass + cleaned`). |
+| `labeling_discard_reason_counts_json` | JSON map of discard reasons to counts. |
+
+</div>
+
+<p><a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-topic-summaries" target="_blank" rel="noopener">view topic summaries on hugging face ↗</a></p>
+
+<Heading level={3}>labeled posts</Heading>
+
+One row per post, keyed by `record_key`. Each post carries the structured labels below; the value sets follow the codebook on the [earlier weibo corpus page](/tech/datasets/weibo-sociolinguistics).
+
+<div class="table-wrap">
+
+| field | what it holds |
+|---|---|
+| `validity` | whether the post is usable, and if not, why. |
+| `target_type` | what the post is mainly about, or directed at. |
+| `stance` | the post's stance toward that target. |
+| `emotion_category` · `emotion_subtype` | the dominant emotion and a finer emotion within it. |
+| `mf_main` · `mf_direction` | the moral foundation invoked and which pole of it. |
+| `satire` | whether the post is satirical or ironic. |
+| `risk_score` | a deterministic score used to flag labels that may need a closer look. |
+
+</div>
+
+<p><a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-labeled-posts" target="_blank" rel="noopener">view labeled posts on hugging face ↗</a></p>
+
+<Heading level={3}>weekly label reviews</Heading>
+
+Once a week, a sample of the daily labels is reviewed by hand and the verdicts are published here. The daily release is append-only, so reviews never rewrite it; keeping them apart means the model's labels can always be compared with the reviewed ones, which is how labeling quality is measured.
+
+<p><a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-weekly-label-reviews" target="_blank" rel="noopener">view weekly label reviews on hugging face ↗</a></p>
+
+<Heading level={2}>4. limitations & responsible use</Heading>
+
+<Callout type="conclusion" title="Read before using">
+  - **One topic per day**, chosen from hot searches, so this is not a probability sample of Weibo.
+  - **"Popular" is Weibo's own ordering** at collection time, not a global ranking computed by the researcher. Timing, deletions, and deduplication all introduce bias.
+  - **Summaries and daily labels are model-generated.** Use the weekly reviews when you need human-checked labels.
+  - **De-identification reduces risk but does not guarantee anonymity**: homophones, emoji spellings, text inside images, and distinctive public events can slip through. Please don't use the data to identify, profile, or contact individuals.
+</Callout>
+
+<Heading level={2}>5. license & attribution</Heading>
+
+Each dataset's card on Hugging Face states its license. The topic summaries are released under **CC BY 4.0** for the publisher-controlled summaries, annotations, documentation, and database arrangement; this does not relicense third-party Weibo material. When citing, give the dataset title, the publisher handle `maikurokosmos`, the repository URL, the revision or access date, and the rows you used.
+
+<Heading level={2}>6. feedback & removal requests</Heading>
+
+Questions and removal requests go through each dataset's Discussions on Hugging Face. Please share only the affected `record_key` (or date and topic), never identity documents or other sensitive evidence. You can also write to **[maikurokosmos@gmail.com](mailto:maikurokosmos@gmail.com)**.

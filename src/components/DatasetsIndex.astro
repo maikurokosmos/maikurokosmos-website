@@ -10,6 +10,8 @@ const t = useTranslations(lang);
 const datasetsLabel = subLabel(getSubSection('tech', 'datasets')!.sub, lang);
 const section = getSection('tech')!;
 const accent = section.accent;
+// active datasets first, discontinued ones kept below for reference (order within each group = config order)
+const datasets = [...DATASETS].sort((a, b) => Number(a.status === 'discontinued') - Number(b.status === 'discontinued'));
 ---
 
 <BaseLayout title={`${datasetsLabel} · ${secLabel(section, lang)}`} description={t('datasets.lead')}>
@@ -26,14 +28,15 @@ const accent = section.accent;
       <p class="lead">{t('datasets.lead')}</p>
 
       <div class="ds-grid">
-        {DATASETS.map((d) => {
+        {datasets.map((d) => {
           const title = lang === 'zh' ? d.titleZh : d.titleEn;
           const blurb = lang === 'zh' ? d.blurbZh : d.blurbEn;
           const tags = lang === 'zh' ? d.tagsZh : d.tags;
+          const off = d.status === 'discontinued';
           return (
-            <a class="card ds-card" href={localizedHref(d.href, lang)} style={`border-top-color:${accent}`}>
+            <a class:list={['card', 'ds-card', { 'ds-card--off': off }]} href={localizedHref(d.href, lang)} style={`border-top-color:${off ? 'var(--c-border)' : accent}`}>
               <div class="ds-chips">
-                <span class="ds-chip" style={`background:${accent}`}>{t('datasets.growing')}</span>
+                <span class="ds-chip" style={`background:${off ? 'var(--c-muted)' : accent}`}>{t(off ? 'datasets.discontinued' : 'datasets.growing')}</span>
                 <time class="ds-date">{formatDate(d.date, lang)}</time>
               </div>
               <h3 class="ds-title">{title}</h3>
@@ -81,6 +84,7 @@ const accent = section.accent;
     padding: 3px 9px;
     border-radius: 999px;
   }
+  .ds-card--off .ds-title { color: var(--c-muted); }
   .ds-date { font-size: 0.82rem; color: var(--c-muted); font-variant-numeric: tabular-nums; }
   .ds-title { font-size: 1.25rem; line-height: 1.2; margin: 0 0 10px; }
   .ds-blurb { color: var(--c-muted); font-size: 0.96rem; margin: 0 0 16px; }

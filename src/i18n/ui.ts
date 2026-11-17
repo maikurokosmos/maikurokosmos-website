@@ -54,6 +54,7 @@ export const ui: Record<Lang, Record<string, string>> = {
     'datasets.open': 'open dataset →',
     'datasets.viewHf': 'view on hugging face ↗',
     'datasets.growing': 'growing daily',
+    'datasets.discontinued': 'discontinued',
 
     // —— section index ——
     'section.latestEyebrow': 'latest',
@@ -125,6 +126,7 @@ export const ui: Record<Lang, Record<string, string>> = {
     'datasets.open': '查看数据集 →',
     'datasets.viewHf': '在 Hugging Face 查看 ↗',
     'datasets.growing': '每日增长',
+    'datasets.discontinued': '已停更',
 
     // —— section index ——
     'section.latestEyebrow': '最新',

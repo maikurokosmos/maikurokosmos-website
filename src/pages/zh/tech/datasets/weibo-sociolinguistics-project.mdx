@@ -1,0 +1,101 @@
+---
+layout: ../../../../layouts/ArticleLayout.astro
+title: 微博社会语言学项目
+eyebrow: 数据集
+date: 2026 Oct 07
+description: 围绕微博热搜话题的每日数据流程，发布为三个互相关联的数据集：话题总结、博文标注与每周人工复核。
+---
+
+import Callout from '../../../../components/mdx/Callout.astro';
+import Heading from '../../../../components/mdx/Heading.astro';
+
+**微博社会语言学项目**每个研究日期跟进一个微博热搜话题，研究人们如何谈论它。每天的流程在 Hugging Face 上发布为**三个互相关联的数据集**：话题级背景、博文级标注与人工复核，既可以单独使用，也可以拼接起来一起用。
+
+<p style="display:flex;flex-wrap:wrap;gap:12px">
+  <a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-topic-summaries" target="_blank" rel="noopener">话题总结 ↗</a>
+  <a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-labeled-posts" target="_blank" rel="noopener">博文标注 ↗</a>
+  <a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-weekly-label-reviews" target="_blank" rel="noopener">每周人工复核 ↗</a>
+</p>
+
+<Heading level={2}>1. 项目基本信息</Heading>
+
+- **来源**：每个研究日期选定的一个微博热搜话题，以及该话题下最多 200 条微博热门博文。
+- **节奏**：每日更新（第一个研究日期：2026 Sept 28），人工复核每周一次。
+- **规模**：目前约 8,500 条已标注博文，并在增加。
+- **语言**：中文。
+- **关联键**：博文用 `record_key`（`YYYY-MM-DD::话题::NNN`），话题用 `topic_key`（`YYYY-MM-DD::话题`）。
+
+<Heading level={2}>2. 每天的流程</Heading>
+
+1. **记录当天热搜榜**并抓取话题指标。
+2. **选定一个研究话题**。
+3. **采集博文**。按页序遍历微博的「热门」结果，去重前最多 200 条。研究日期标识的是这一批次，并不按博文发布时间筛选。
+4. **生成话题总结**。语言模型基于最多 20 条高互动博文和最多 20 条较长博文写出话题级概述。
+5. **为每条博文打标**。在另一个模型流程中完成，并经过确定性的校验与清洗。
+6. **脱敏并发布**。叙事字段经过确定性的公开文本处理，把手机号、身份证号、邮箱、URL、微博用户名和成对话题标签替换为占位符。
+7. **每周复核**。抽取一部分标签人工核对，结果单独发布。
+
+<Heading level={2}>3. 三个数据集</Heading>
+
+<Heading level={3}>话题总结</Heading>
+
+每个研究日期一行：选定的话题、微博当时显示的话题指标、由模型生成并经过脱敏的总结，以及当天打标的汇总计数。**不发布单条博文正文、用户名或逐条诊断信息**。以单个累计 CSV 发布，采用 **CC BY 4.0**。
+
+<div class="table-wrap">
+
+| 字段 | 内容 |
+|---|---|
+| `topic_key` · `date` · `topic` · `url` | 话题标识、研究日期与来源链接。 |
+| `read_count` · `discuss_count` · `interact_count` · `original_count` | 抓取时微博显示的话题阅读、讨论、互动、原创数。 |
+| `description` | 微博自己的话题分类（不是生成的描述）。 |
+| `summary` | 模型生成、经过脱敏的话题总结。 |
+| `summary_model` · `summary_prompt_version` · `summary_sampling_version` | 生成相关的元数据。 |
+| `labeling_input_count` … `labeling_final_count` | 当天打标流程的汇总计数（`final = pass + cleaned`）。 |
+| `labeling_discard_reason_counts_json` | 丢弃原因到数量的 JSON 映射。 |
+
+</div>
+
+<p><a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-topic-summaries" target="_blank" rel="noopener">在 Hugging Face 查看话题总结 ↗</a></p>
+
+<Heading level={3}>博文标注</Heading>
+
+每条博文一行，以 `record_key` 为键。每条博文带有以下结构化标签，取值沿用[之前微博语料库页面](/zh/tech/datasets/weibo-sociolinguistics)里的标注方案。
+
+<div class="table-wrap">
+
+| 字段 | 内容 |
+|---|---|
+| `validity` | 博文是否可用，不可用的话原因是什么。 |
+| `target_type` | 博文主要谈论或指向的对象。 |
+| `stance` | 对该对象的立场。 |
+| `emotion_category` · `emotion_subtype` | 主导情绪及其细分。 |
+| `mf_main` · `mf_direction` | 所涉及的道德基础及其方向。 |
+| `satire` | 是否带有反讽或讽刺。 |
+| `risk_score` | 确定性计算的分数，用来标出可能需要复查的标签。 |
+
+</div>
+
+<p><a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-labeled-posts" target="_blank" rel="noopener">在 Hugging Face 查看博文标注 ↗</a></p>
+
+<Heading level={3}>每周人工复核</Heading>
+
+每周抽取一部分每日标签人工复核，判定结果发布在这里。每日发布只追加、不改写，所以复核不会去覆盖它；单独存放之后，随时可以拿模型标签和复核结果对比，标注质量也正是这样衡量的。
+
+<p><a class="btn btn--ghost" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-weekly-label-reviews" target="_blank" rel="noopener">在 Hugging Face 查看每周人工复核 ↗</a></p>
+
+<Heading level={2}>4. 局限与负责任的使用</Heading>
+
+<Callout type="conclusion" title="使用前请先读">
+  - **每天只有一个话题**，且从热搜中选出，因此不是微博的概率抽样。
+  - **「热门」是微博在采集时给出的排序**，并非研究者计算的全局排名；采集时间、删帖与去重都会带来偏差。
+  - **总结与每日标签由模型生成**。需要人工核对过的标签时，请使用每周复核数据。
+  - **脱敏能降低风险，但不能保证匿名**：谐音、emoji 拼写、图片中的文字、具辨识度的公共事件都可能漏过。请勿用于识别、画像或联系任何个人。
+</Callout>
+
+<Heading level={2}>5. 许可与署名</Heading>
+
+各数据集的许可以 Hugging Face 上的说明为准。话题总结中发布者可控的总结、标注、文档与数据库编排部分采用 **CC BY 4.0**，这并不重新授权第三方的微博内容。引用时请注明数据集名称、发布者 `maikurokosmos`、仓库链接、所用版本或访问日期，以及所用的行。
+
+<Heading level={2}>6. 反馈与删除请求</Heading>
+
+问题与删除请求请在 Hugging Face 上对应数据集的 Discussions 提出。只需提供受影响的 `record_key`（或日期与话题），请勿公开身份证件或其他敏感材料。也可以写信到 **[maikurokosmos@gmail.com](mailto:maikurokosmos@gmail.com)**。
