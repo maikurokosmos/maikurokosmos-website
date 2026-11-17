@@ -1,0 +1,46 @@
+---
+layout: ../../../layouts/ArticleLayout.astro
+title: weibo sociolinguistics labeled posts
+eyebrow: datasets
+date: 2026 Oct 07
+description: The post-level companion to the topic summaries. Up to 200 popular posts per daily Weibo topic, each labeled for validity, target, stance, emotion, moral framing, and satire.
+---
+
+import Callout from '../../../components/mdx/Callout.astro';
+import Heading from '../../../components/mdx/Heading.astro';
+
+**weibo-sociolinguistics-labeled-posts** is the post-level half of the Weibo sociolinguistics project. For each research date, the popular posts collected under that day's topic (up to 200 before deduplication) are labeled by a daily model run and released here, one row per post. The topic itself, with its summary and aggregate counts, lives in [topic summaries](/tech/datasets/weibo-topic-summaries).
+
+<p>
+  <a class="btn btn--primary" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-labeled-posts" target="_blank" rel="noopener">view the dataset on hugging face ↗</a>
+</p>
+
+<Heading level={2}>1. at a glance</Heading>
+
+- **Source**: Weibo popular-post results for one selected hot-search topic per research date.
+- **Cadence**: daily (first research date: 2026 Sept 28).
+- **Size**: about 8,500 released rows so far, and counting.
+- **Unit of analysis**: one row = one post, keyed by `record_key` (`YYYY-MM-DD::topic::NNN`).
+- **Labels**: model-generated, with deterministic validation and cleaning. Human review is published separately in [weekly label reviews](/tech/datasets/weibo-weekly-label-reviews) and never overwrites the daily release.
+
+<Heading level={2}>2. labels</Heading>
+
+Each post carries the structured labels below. The value sets follow the codebook documented on the [earlier weibo corpus page](/tech/datasets/weibo-sociolinguistics).
+
+<div class="table-wrap">
+
+| field | what it holds |
+|---|---|
+| `validity` | whether the post is usable, and if not, why. |
+| `target_type` | what the post is mainly about, or directed at. |
+| `stance` | the post's stance toward that target. |
+| `emotion_category` · `emotion_subtype` | the dominant emotion and a finer emotion within it. |
+| `mf_main` · `mf_direction` | the moral foundation invoked and which pole of it. |
+| `satire` | whether the post is satirical or ironic. |
+| `risk_score` | a deterministic score used to flag labels that may need a closer look. |
+
+</div>
+
+<Callout type="conclusion" title="Read before using">
+  Labels are model-generated, and posts come from Weibo's own popular ordering for one topic a day, so this is not a random sample of Weibo. See the dataset card on Hugging Face for the full field list, privacy notes, and license.
+</Callout>

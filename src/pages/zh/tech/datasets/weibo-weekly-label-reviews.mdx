@@ -1,0 +1,26 @@
+---
+layout: ../../../../layouts/ArticleLayout.astro
+title: 微博社会语言学 · 每周人工复核
+eyebrow: 数据集
+date: 2026 Oct 07
+description: 针对每日微博博文标注的每周人工复核层。复核结果单独存放，不会覆盖每日发布的数据。
+---
+
+import Callout from '../../../../components/mdx/Callout.astro';
+import Heading from '../../../../components/mdx/Heading.astro';
+
+**weibo-sociolinguistics-weekly-label-reviews** 是微博社会语言学项目中人工的那一部分。[博文标注](/zh/tech/datasets/weibo-labeled-posts)里的每日标签由模型生成并经过确定性检查；每周会抽取一部分人工复核，结果发布在这里。
+
+<p>
+  <a class="btn btn--primary" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-weekly-label-reviews" target="_blank" rel="noopener">在 Hugging Face 查看数据集 ↗</a>
+</p>
+
+<Heading level={2}>1. 三个数据集的关系</Heading>
+
+- [话题总结](/zh/tech/datasets/weibo-topic-summaries)：每天一行，话题与总结。
+- [博文标注](/zh/tech/datasets/weibo-labeled-posts)：每条博文一行，模型的每日标签。
+- **每周人工复核**：对这些标签每周抽样的人工判定。
+
+<Callout type="conclusion" title="为什么把复核单独放">
+  每日发布只追加、不改写，所以复核不会去覆盖它。人工判定单独成一个数据集，就可以随时拿模型标签和复核结果对比，标注质量也正是这样衡量的。
+</Callout>

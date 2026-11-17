@@ -1,0 +1,26 @@
+---
+layout: ../../../layouts/ArticleLayout.astro
+title: weibo sociolinguistics weekly label reviews
+eyebrow: datasets
+date: 2026 Oct 07
+description: A separate weekly human-review layer for the daily Weibo post labels. Reviews are kept on their own and never overwrite the daily release.
+---
+
+import Callout from '../../../components/mdx/Callout.astro';
+import Heading from '../../../components/mdx/Heading.astro';
+
+**weibo-sociolinguistics-weekly-label-reviews** holds the human side of the Weibo sociolinguistics project. The daily labels in [labeled posts](/tech/datasets/weibo-labeled-posts) are produced by a model with deterministic checks; once a week, a sample of them is reviewed by hand and the results are published here.
+
+<p>
+  <a class="btn btn--primary" href="https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-weekly-label-reviews" target="_blank" rel="noopener">view the dataset on hugging face ↗</a>
+</p>
+
+<Heading level={2}>1. how it fits</Heading>
+
+- [topic summaries](/tech/datasets/weibo-topic-summaries): one row per day, the topic and its summary.
+- [labeled posts](/tech/datasets/weibo-labeled-posts): one row per post, the daily model labels.
+- **weekly label reviews**: human verdicts on a weekly sample of those labels.
+
+<Callout type="conclusion" title="Why keep reviews separate">
+  The daily release is append-only, so reviews never rewrite it. Keeping the human verdicts in their own dataset means you can always compare the model's labels with the reviewed ones, which is how the labeling quality gets measured.
+</Callout>
