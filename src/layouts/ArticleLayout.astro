@@ -82,7 +82,7 @@ const t = useTranslations(lang);
   .toc :global(.toc-l3 a) { padding-left: 26px; font-size: 0.85rem; }
 
   @media (max-width: 860px) {
-    .art-wrap.has-toc { grid-template-columns: 1fr; gap: 0; }
+    .art-wrap.has-toc { grid-template-columns: minmax(0, 1fr); gap: 0; }
     .toc { display: none; }
   }
 </style>

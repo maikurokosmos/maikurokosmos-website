@@ -27,51 +27,19 @@ export interface DatasetEntry {
 
 export const DATASETS: DatasetEntry[] = [
   {
-    slug: 'weibo-topic-summaries',
-    titleEn: 'weibo sociolinguistics topic summaries',
-    titleZh: '微博社会语言学 · 话题总结',
+    slug: 'weibo-sociolinguistics-project',
+    titleEn: 'weibo sociolinguistics project',
+    titleZh: '微博社会语言学项目',
     blurbEn:
-      'One row per research date: the Weibo hot-search topic selected that day, its metrics, a de-identified topic-level summary, and aggregate labeling counts. No individual post text.',
+      'A daily pipeline over Weibo hot-search topics, released as three linked datasets: topic summaries, post-level labels for stance, emotion, moral framing, and satire, and a weekly human review of those labels.',
     blurbZh:
-      '每个研究日期一行：当天选定的微博热搜话题、话题指标、经过脱敏的话题级总结，以及当天打标的汇总计数。不发布单条博文正文。',
-    tags: ['weibo', 'sociolinguistics', 'topic summaries', 'cc by 4.0'],
-    tagsZh: ['微博', '社会语言学', '话题总结', 'CC BY 4.0'],
-    rows: 48,
+      '围绕微博热搜话题的每日数据流程，发布为三个互相关联的数据集：话题总结、标注了立场、情绪、道德框架与反讽的博文级数据，以及对这些标注的每周人工复核。',
+    tags: ['weibo', 'sociolinguistics', 'stance & emotion', 'human review'],
+    tagsZh: ['微博', '社会语言学', '立场与情绪', '人工复核'],
+    rows: 8500,
     hfUrl: 'https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-topic-summaries',
     date: '2026-10-07',
-    href: '/tech/datasets/weibo-topic-summaries',
-    status: 'active',
-  },
-  {
-    slug: 'weibo-labeled-posts',
-    titleEn: 'weibo sociolinguistics labeled posts',
-    titleZh: '微博社会语言学 · 博文标注',
-    blurbEn:
-      'The post-level companion: up to 200 popular posts per daily topic, each labeled for validity, target, stance, emotion, moral framing, and satire.',
-    blurbZh:
-      '与话题总结配套的博文级数据：每日话题下最多 200 条热门博文，逐条标注有效性、指向对象、立场、情绪、道德框架与反讽。',
-    tags: ['weibo', 'sociolinguistics', 'stance & emotion', 'post-level'],
-    tagsZh: ['微博', '社会语言学', '立场与情绪', '博文级'],
-    rows: 8500,
-    hfUrl: 'https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-labeled-posts',
-    date: '2026-10-07',
-    href: '/tech/datasets/weibo-labeled-posts',
-    status: 'active',
-  },
-  {
-    slug: 'weibo-weekly-label-reviews',
-    titleEn: 'weibo sociolinguistics weekly label reviews',
-    titleZh: '微博社会语言学 · 每周人工复核',
-    blurbEn:
-      'A separate weekly human-review layer for the daily labels. Reviews are kept on their own and never overwrite the daily release.',
-    blurbZh:
-      '针对每日标注的每周人工复核层。复核结果单独存放，不会覆盖每日发布的数据。',
-    tags: ['weibo', 'human review', 'label quality'],
-    tagsZh: ['微博', '人工复核', '标注质量'],
-    rows: 0,
-    hfUrl: 'https://huggingface.co/datasets/maikurokosmos/weibo-sociolinguistics-weekly-label-reviews',
-    date: '2026-10-07',
-    href: '/tech/datasets/weibo-weekly-label-reviews',
+    href: '/tech/datasets/weibo-sociolinguistics-project',
     status: 'active',
   },
   {
